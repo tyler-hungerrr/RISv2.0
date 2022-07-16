@@ -16,6 +16,7 @@ public class SuperMain {
      */
     public static void main(String[] args) {
         System.out.println("IM RUNNING!");
+        System.out.println("IM Starting!");
         App.main1(args);
     }
 
