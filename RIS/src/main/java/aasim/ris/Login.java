@@ -49,7 +49,7 @@ public class Login extends Stage {
     //Create Username/Password Label and Textbox 
 
     private Label textUsername = new Label("Enter your Username:");
-    private TextField inputUsername = new TextField("here");
+    private TextField inputUsername = new TextField();
     private Label textPassword = new Label("Enter your Password:");
     private PasswordField inputPassword = new PasswordField();
     //Create Login Button. Logic for Button at End.
