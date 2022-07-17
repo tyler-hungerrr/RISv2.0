@@ -57,6 +57,7 @@ public class Login extends Stage {
     private GridPane grid = new GridPane();
     VBox center = new VBox();
     Scene scene = new Scene(center, 1000, 1000);
+    //new KeyFrame();
 
     //Constructor. Displays view
     //
