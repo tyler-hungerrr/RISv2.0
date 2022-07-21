@@ -178,7 +178,7 @@ public class Rad extends Stage {
                 + " FROM appointments"
                 + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID"
                 + " INNER JOIN patients ON appointments.patient_id = patients.patientID"
-                + " WHERE statusCode = 4"
+                + " WHERE statusCode BETWEEN 4 AND 6"
                 + " ORDER BY time ASC;";
         try {
 
