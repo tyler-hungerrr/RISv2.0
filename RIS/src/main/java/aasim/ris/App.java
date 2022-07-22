@@ -93,11 +93,13 @@ public class App extends Application {
         Creates tables Appointments, AppointmentsOrdersConnector
      */
     public static void createAppointmentTable(String fileName) {
-        //apptId, patientID, fullname, time, address, insurance, referral, status, order
+        //apptId, patientID, fullname, time, techtime, techtime1, address, insurance, referral, status, order
         String sql = "CREATE TABLE appointments (\n"
                 + "	appt_id INT PRIMARY KEY UNIQUE DEFAULT unique_rowid(),\n"
                 + "	patient_id INT NOT NULL,\n"
                 + "	time VARCHAR(25) NOT NULL,\n"
+                + "	techtime VARCHAR(10) NOT NULL,\n"
+                + "	techtime1 VARCHAR(10) NOT NULL,\n"
                 + "     statusCode INT NOT NULL, "
                 + "     viewable INT DEFAULT 1, "
                 + "     UNIQUE(patient_id, time) "

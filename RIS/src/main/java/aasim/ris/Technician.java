@@ -161,7 +161,7 @@ public class Technician extends Stage {
         appointmentsTable.getItems().clear();
         //Connect to database
 
-        String sql = "Select appt_id, patient_id, patients.full_name, time, statusCode.status"
+        String sql = "Select appt_id, patient_id, patients.full_name, time, techtime, techtime1, statusCode.status"
                 + " FROM appointments"
                 + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID"
                 + " INNER JOIN patients ON appointments.patient_id = patients.patientID"
@@ -179,7 +179,7 @@ public class Technician extends Stage {
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("techtime"), rs.getString("techtime1"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
                 appt.setFullName(rs.getString("full_name"));
                 list.add(appt);
             }
@@ -506,9 +506,11 @@ public class Technician extends Stage {
     }
 
     private void updateAppointmentStatus(String patID, String apptId) {
+        java.sql.Date date=new java.sql.Date(System.currentTimeMillis());
 
         String sql = "UPDATE appointments"
                 + " SET statusCode = 4"
+                + " SET techtime1 = '" + date + "'"
                 + " WHERE appt_id = '" + apptId + "';";
         try {
 

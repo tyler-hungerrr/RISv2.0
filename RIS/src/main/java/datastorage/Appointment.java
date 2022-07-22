@@ -15,7 +15,7 @@ import javafx.scene.control.Label;
 public class Appointment {
 
     String apptID, patientID;
-    String time, status, order;
+    String time, techtime, techtime1, status, order;
     float total;
     String fullName;
     public Button placeholder = new Button("Placeholder");
@@ -23,10 +23,12 @@ public class Appointment {
     public Button button = new Button("Button");
     public Button placeholder1 = new Button("Placeholder");
 
-    public Appointment(String apptID, String patientID, String time, String status, String order) {
+    public Appointment(String apptID, String patientID, String time, String techtime, String techtime1, String status, String order) {
         this.apptID = apptID;
         this.patientID = patientID;
         this.time = time;
+        this.techtime = techtime;
+        this.techtime1 = techtime1;
         this.status = status;
         this.order = order;
     }
@@ -85,6 +87,22 @@ public class Appointment {
 
     public void setTime(String time) {
         this.time = time;
+    }
+    
+    public String getTechTime() {
+        return techtime;
+    }
+
+    public void setTechTime(String techtime) {
+        this.techtime = techtime;
+    }
+    
+    public String getTechTime1() {
+        return techtime1;
+    }
+
+    public void setTechTime1(String techtime1) {
+        this.techtime1 = techtime1;
     }
 
     public String getStatus() {

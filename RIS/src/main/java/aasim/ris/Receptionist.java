@@ -193,7 +193,7 @@ public class Receptionist extends Stage {
         table.getItems().clear();
         //Connect to database
 
-        String sql = "Select appt_id, patient_id, patients.full_name, time, statusCode.status"
+        String sql = "Select appt_id, patient_id, patients.full_name, time, techtime, statusCode.status"
                 + " FROM appointments"
                 + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID "
                 + " INNER JOIN patients ON patients.patientID = appointments.patient_id"
@@ -212,7 +212,7 @@ public class Receptionist extends Stage {
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("techtime"), rs.getString("techtime1"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
                 appt.setFullName(rs.getString("full_name"));
                 list.add(appt);
             }
@@ -648,6 +648,7 @@ public class Receptionist extends Stage {
     }
 
     private void updateStatus(String status, Appointment appt) {
+        java.sql.Date date=new java.sql.Date(System.currentTimeMillis());
         String sql = "UPDATE appointments "
                 + " SET statusCode = "
                 + "     (SELECT statusID FROM statusCode WHERE status = '" + status + "') "
@@ -657,6 +658,12 @@ public class Receptionist extends Stage {
         if (status.contains("Cancelled")) {
             String sql1 = "INSERT INTO  patientOrders VALUES ('" + appt.getPatientID() + "', (SELECT orderCodeID FROM appointmentsOrdersConnector WHERE apptID = '" + appt.getApptID() + "'), '1');";
             App.executeSQLStatement(sql1);
+        }
+        if (status.contains("Technician")) {
+            String sql2 = "UPDATE appointments "
+                + " SET techtime = '" + date + "' "
+                + " WHERE appt_id = '" + appt.getApptID() + "';";
+            App.executeSQLStatement(sql2);
         }
     }
 

@@ -51,6 +51,7 @@ public class Administrator extends Stage {
     Label appointments = new Label("Appointments");
     Label modalities = new Label("Modalities");
     Label patientAlerts = new Label("Patient Alerts");
+    Label performanceReports = new Label("Performance Reports");
     Button logOut = new Button("Log Out");
     //End Navbar
 
@@ -61,6 +62,7 @@ public class Administrator extends Stage {
     VBox appointmentsContainer = new VBox();
     VBox modalitiesContainer = new VBox();
     VBox patientAlertsContainer = new VBox();
+    VBox performanceReportsContainer = new VBox();
     //
     //Scene
     BorderPane main = new BorderPane();
@@ -90,7 +92,7 @@ public class Administrator extends Stage {
         pfp.setFitHeight(38);
         username.setId("navbar");
         username.setOnMouseClicked(eh -> userInfo());
-        HBox navButtons = new HBox(users, patients, appointments, modalities, patientAlerts);
+        HBox navButtons = new HBox(users, patients, appointments, modalities, patientAlerts, performanceReports);
         navButtons.setAlignment(Pos.TOP_LEFT);
 //        navButtons.setSpacing(10);
         HBox.setHgrow(navButtons, Priority.ALWAYS);
@@ -103,6 +105,7 @@ public class Administrator extends Stage {
         appointments.setId("navbar");
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
+        performanceReports.setId("navbar");
         //End navbar
 
         //Center
@@ -113,6 +116,7 @@ public class Administrator extends Stage {
         appointments.setOnMouseClicked(eh -> appointmentsPageView());
         modalities.setOnMouseClicked(eh -> modalitiesPageView());
         patientAlerts.setOnMouseClicked(eh -> patientAlertsPageView());
+        performanceReports.setOnMouseClicked(eh -> performancePageView());
 
         //End Center
         //Set Scene and Structure
@@ -233,11 +237,12 @@ public class Administrator extends Stage {
         buttonContainer.setSpacing(10);
         usersContainer.getChildren().addAll(table, buttonContainer);
         usersContainer.setSpacing(10);
-        users.setId("selected");
+        users.setId("navbar");
         patients.setId("navbar");
         appointments.setId("navbar");
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
+        performanceReports.setId("navbar");
 
         //
         //Searchbar Structure
@@ -458,10 +463,11 @@ public class Administrator extends Stage {
         patientsContainer.getChildren().addAll(table);
         patientsContainer.setSpacing(10);
         users.setId("navbar");
-        patients.setId("selected");
+        patients.setId("navbar");
         appointments.setId("navbar");
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
+        performanceReports.setId("navbar");
 
         //Searchbar Structure
         ChoiceBox<String> choiceBox = new ChoiceBox();
@@ -579,9 +585,10 @@ public class Administrator extends Stage {
         appointmentsContainer.setSpacing(10);
         users.setId("navbar");
         patients.setId("navbar");
-        appointments.setId("selected");
+        appointments.setId("navbar");
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
+        performanceReports.setId("navbar");
 
         //Searchbar Structure
         ChoiceBox<String> choiceBox = new ChoiceBox();
@@ -648,7 +655,7 @@ public class Administrator extends Stage {
     private void populateTableAppointments() {
         table.getItems().clear();
         //Connect to database
-        String sql = "Select appt_id, patient_id, patients.full_name, time, statusCode.status"
+        String sql = "Select appt_id, patient_id, patients.full_name, time, techtime, techtime1, statusCode.status"
                 + " FROM appointments"
                 + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID "
                 + " INNER JOIN patients ON patients.patientID = appointments.patient_id"
@@ -665,7 +672,7 @@ public class Administrator extends Stage {
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("techtime"), rs.getString("techtime1"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
                 appt.setFullName(rs.getString("full_name"));
                 list.add(appt);
             }
@@ -727,8 +734,9 @@ public class Administrator extends Stage {
         users.setId("navbar");
         patients.setId("navbar");
         appointments.setId("navbar");
-        modalities.setId("selected");
+        modalities.setId("navbar");
         patientAlerts.setId("navbar");
+        performanceReports.setId("navbar");
 
         addModality.setOnAction(eh -> addModality());
     }
@@ -859,7 +867,8 @@ public class Administrator extends Stage {
         patients.setId("navbar");
         appointments.setId("navbar");
         modalities.setId("navbar");
-        patientAlerts.setId("selected");
+        patientAlerts.setId("navbar");
+        performanceReports.setId("navbar");
         addPatientAlert.setOnAction(eh -> addPatientAlert());
     }
 
@@ -1090,6 +1099,89 @@ public class Administrator extends Stage {
         }
         return dropdown;
     }
+    //</editor-fold>
+//
+//<editor-fold defaultstate="collapsed" desc="Performance Reports Section">
+    private void performancePageView() {
+        performanceReportsContainer.getChildren().clear();
+        main.setCenter(performanceReportsContainer);
+        populateTablePerformance();
+
+        performanceReportsContainer.getChildren().addAll(table);
+        performanceReportsContainer.setSpacing(10);
+        users.setId("navbar");
+        patients.setId("navbar");
+        appointments.setId("navbar");
+        modalities.setId("navbar");
+        patientAlerts.setId("navbar");
+        performanceReports.setId("navbar");
+
+        //Searchbar Structure
+        ChoiceBox<String> choiceBox = new ChoiceBox();
+        TextField search = new TextField("Search Users");
+        HBox searchContainer = new HBox(choiceBox, search);
+        searchContainer.setAlignment(Pos.TOP_RIGHT);
+        HBox.setHgrow(searchContainer, Priority.ALWAYS);
+        choiceBox.setPrefHeight(40);
+        search.setPrefHeight(40);
+        choiceBox.getItems().addAll("User ID", "Full Name", "Email", "Role");
+        choiceBox.setValue("User ID");
+        search.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (choiceBox.getValue().equals("User ID")) {
+                flUsers.setPredicate(p -> new String(p.getUserID() + "").contains(newValue));//filter table by Appt ID
+            }
+            if (choiceBox.getValue().equals("Full Name")) {
+                flUsers.setPredicate(p -> p.getFullName().toLowerCase().contains(newValue.toLowerCase()));//filter table by Patient Id
+            }
+            if (choiceBox.getValue().equals("Email")) {
+                flUsers.setPredicate(p -> p.getEmail().toLowerCase().contains(newValue.toLowerCase()));//filter table by Full name
+            }
+            if (choiceBox.getValue().equals("Role")) {
+                flUsers.setPredicate(p -> p.getRoleVal().toLowerCase().contains(newValue.toLowerCase()));//filter table by Date/Time
+            }
+            table.getItems().clear();
+            table.getItems().addAll(flUsers);
+        });
+        performanceReportsContainer.getChildren().add(searchContainer);
+    }
+        
+        private void populateTablePerformance(){
+        table.getItems().clear();
+        //Connect to database
+        String sql = "Select appt_id, techtime, techtime1"
+                + " FROM appointments"
+                + " "
+                + " ORDER BY time ASC;";
+
+        try {
+
+            Connection conn = ds.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            //
+            List<Appointment> list = new ArrayList<Appointment>();
+
+            while (rs.next()) {
+                //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("techtime"), rs.getString("techtime1"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                appt.setFullName(rs.getString("full_name"));
+                list.add(appt);
+            }
+
+            flAppointment = new FilteredList(FXCollections.observableList(list), p -> true);
+            table.getItems().addAll(flAppointment);
+            //
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+
+    
+
     //</editor-fold>
 //
 }

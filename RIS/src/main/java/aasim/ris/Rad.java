@@ -194,7 +194,7 @@ public class Rad extends Stage {
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("techtime"), rs.getString("techtime1"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
                 appt.setFullName(rs.getString("full_name"));
                 list.add(appt);
                 list1.add(appt);
@@ -207,13 +207,11 @@ public class Rad extends Stage {
                         radPageTwo(z.getPatientID(), z.getApptID(), z.getFullName(), z.getOrder());
                     }
                 });
-            }
-            for (Appointment g : list1) {
-                g.placeholder.setText("Edit Report");
-                g.placeholder.setOnAction(new EventHandler<ActionEvent>() {
+                z.edit.setText("Edit Report");
+                z.edit.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent e) {
-                        radPageThree(g.getPatientID(), g.getApptID(), g.getFullName(), g.getOrder());
+                        radPageThree(z.getPatientID(), z.getApptID(), z.getFullName(), z.getOrder());
                         //editFile(patID, apptId);
                     }
                 });
