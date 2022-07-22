@@ -149,6 +149,7 @@ public class Rad extends Stage {
         TableColumn orderIDCol = new TableColumn("Orders");
         TableColumn statusCol = new TableColumn("Appointment Status");
         TableColumn reportCol = new TableColumn("Report");
+        TableColumn reportCol2 = new TableColumn("Edit Report");
 
         //all of the value settings
         patientIDCol.setCellValueFactory(new PropertyValueFactory<>("patientID"));
@@ -157,16 +158,17 @@ public class Rad extends Stage {
         orderIDCol.setCellValueFactory(new PropertyValueFactory<>("order"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("statusAsLabel"));
         reportCol.setCellValueFactory(new PropertyValueFactory<>("placeholder"));
+        reportCol2.setCellValueFactory(new PropertyValueFactory<>("report"));
 
         //Couldn't put all the styling
 //        patientIDCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.09));
 //        fullNameCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.06));
 //        timeCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.2));
         orderIDCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.3));
-//        reportCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.3));
+        reportCol2.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.05));
         appointmentsTable.setStyle("-fx-background-color: #25A18E; -fx-text-fill: WHITE; ");
         //Together again
-        appointmentsTable.getColumns().addAll(patientIDCol, fullNameCol, timeCol, orderIDCol, statusCol, reportCol);
+        appointmentsTable.getColumns().addAll(patientIDCol, fullNameCol, timeCol, orderIDCol, statusCol, reportCol, reportCol2);
         //Add Status Update Column:
     }
 
@@ -188,12 +190,14 @@ public class Rad extends Stage {
             ResultSet rs = stmt.executeQuery(sql);
             //
             List<Appointment> list = new ArrayList<Appointment>();
+            List<Appointment> list1 = new ArrayList<Appointment>();
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
                 Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
                 appt.setFullName(rs.getString("full_name"));
                 list.add(appt);
+                list1.add(appt);
             }
             for (Appointment z : list) {
                 z.placeholder.setText("Create Report");
@@ -203,6 +207,17 @@ public class Rad extends Stage {
                         radPageTwo(z.getPatientID(), z.getApptID(), z.getFullName(), z.getOrder());
                     }
                 });
+            }
+            for (Appointment g : list1) {
+                g.placeholder.setText("Edit Report");
+                g.placeholder.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent e) {
+                        radPageThree(g.getPatientID(), g.getApptID(), g.getFullName(), g.getOrder());
+                        //editFile(patID, apptId);
+                    }
+                });
+                        
             }
             flAppointment = new FilteredList(FXCollections.observableList(list), p -> true);
             appointmentsTable.getItems().addAll(flAppointment);
@@ -304,6 +319,46 @@ public class Rad extends Stage {
         });
 
     }
+    
+    private void radPageThree(String patID, String apptId, String fullname, String order) {
+        VBox container = new VBox();
+        container.setSpacing(10);
+        container.setAlignment(Pos.CENTER);
+        Label patInfo = new Label("Patient: " + fullname + "\t Order/s Requested: " + order + "\n");
+        Label imgInfo = new Label("Images Uploaded: " + fullname + "\t Order/s Requested: " + order);
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png")
+        );
+
+        Button cancel = new Button("Go Back");
+        cancel.setId("cancel");
+        Button editReport = new Button("Edit Report");
+        HBox buttonContainer = new HBox(cancel, editReport);
+        buttonContainer.setAlignment(Pos.CENTER);
+        buttonContainer.setSpacing(25);
+        container.getChildren().addAll(patInfo, buttonContainer);
+        main.setCenter(container);
+        //Set Size of Every button in buttonContainer
+        cancel.setPrefSize(200, 100);
+        editReport.setPrefSize(200, 100);
+        //
+        cancel.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                populateTable();
+                main.setCenter(tableContainer);
+            }
+        });
+
+        editReport.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                editFile(patID, apptId);
+
+            }
+        });
+        
+    }
 
     private void openFile(String patID, String apptId) {
 
@@ -403,9 +458,219 @@ public class Rad extends Stage {
         y.setCenter(container);
         x.show();
     }
+    
+    private void editFile(String patID, String apptId) {
+
+        Stage x = new Stage();
+        x.initOwner(this);
+        x.initModality(Modality.WINDOW_MODAL);
+        x.setMaximized(true);
+        BorderPane y = new BorderPane();
+        Label label = new Label("Report");
+        Button confirm = new Button("Confirm");
+        confirm.setId("complete");
+
+        VBox imgContainer = new VBox();
+        ArrayList<Pair> list = retrieveUploadedImages(apptId);
+        ArrayList<HBox> hbox = new ArrayList<HBox>();
+        int counter = 0;
+        int hboxCounter = 0;
+        if (list.isEmpty()) {
+            System.out.println("Error, image list is empty");
+        } else {
+            for (int i = 0; i < (list.size() / 2) + 1; i++) {
+                hbox.add(new HBox());
+            }
+            for (Pair i : list) {
+                if (counter > 2) {
+                    counter++;
+                    hboxCounter++;
+                }
+                ImageView temp = new ImageView(i.getImg());
+                temp.setPreserveRatio(true);
+                temp.setFitHeight(300);
+                Button download = new Button("Download");
+                VBox tempBox = new VBox(temp, download);
+                tempBox.setId("borderOnHover");
+                tempBox.setSpacing(5);
+                tempBox.setAlignment(Pos.CENTER);
+                tempBox.setPadding(new Insets(10));
+                hbox.get(hboxCounter).getChildren().addAll(tempBox);
+                download.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent e) {
+                        DirectoryChooser directoryChooser = new DirectoryChooser();
+                        File selectedDirectory = directoryChooser.showDialog(x);
+                        downloadImage(i, selectedDirectory);
+                    }
+
+                });
+                counter++;
+            }
+        }
+        for (HBox i : hbox) {
+            imgContainer.getChildren().add(i);
+        }
+        imgContainer.setSpacing(10);
+        imgContainer.setPadding(new Insets(10));
+        ScrollPane s1 = new ScrollPane();
+        s1.setContent(imgContainer);
+
+        TextArea reportText = new TextArea();
+        reportText.getText();
+        //reportText.setText(Rad.getRadiologyReport(appt.getApptID()));
+
+        Button cancel = new Button("Cancel");
+        cancel.setId("cancel");
+        HBox btnContainer = new HBox(cancel, confirm, s1);
+        btnContainer.setSpacing(25);
+        y.getStylesheets().add("file:stylesheet.css");
+        x.setScene(new Scene(y));
+
+        cancel.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                x.close();
+            }
+        });
+        confirm.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (reportText.getText().isBlank()) {
+                    Alert a = new Alert(Alert.AlertType.INFORMATION);
+                    a.setTitle("Error");
+                    a.setHeaderText("Try Again");
+                    a.setContentText("Please enter a valid report.\n");
+                    a.show();
+                    return;
+                }
+                editReportOnDatabase(reportText.getText(), apptId);
+                updateAppointmentStatus(patID, apptId);
+                x.close();
+                populateTable();
+                main.setCenter(tableContainer);
+            }
+        });
+
+        VBox container = new VBox(s1, label, reportText, btnContainer);
+        y.setCenter(container);
+        x.show();
+    }
+    
+    /*private void editFile(String patID, Appointment appt) {
+
+        Stage x = new Stage();
+        x.initOwner(this);
+        x.initModality(Modality.WINDOW_MODAL);
+        x.setMaximized(true);
+        BorderPane y = new BorderPane();
+        Label label = new Label("Report");
+        Button confirm = new Button("Confirm");
+        confirm.setId("complete");
+
+        VBox imgContainer = new VBox();
+        ArrayList<Pair> list = retrieveUploadedImages(appt.getApptID());
+        ArrayList<HBox> hbox = new ArrayList<HBox>();
+        int counter = 0;
+        int hboxCounter = 0;
+        if (list.isEmpty()) {
+            System.out.println("Error, image list is empty");
+        } else {
+            for (int i = 0; i < (list.size() / 2) + 1; i++) {
+                hbox.add(new HBox());
+            }
+            for (Pair i : list) {
+                if (counter > 2) {
+                    counter++;
+                    hboxCounter++;
+                }
+                ImageView temp = new ImageView(i.getImg());
+                temp.setPreserveRatio(true);
+                temp.setFitHeight(300);
+                Button download = new Button("Download");
+                VBox tempBox = new VBox(temp, download);
+                tempBox.setId("borderOnHover");
+                tempBox.setSpacing(5);
+                tempBox.setAlignment(Pos.CENTER);
+                tempBox.setPadding(new Insets(10));
+                hbox.get(hboxCounter).getChildren().addAll(tempBox);
+                download.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent e) {
+                        DirectoryChooser directoryChooser = new DirectoryChooser();
+                        File selectedDirectory = directoryChooser.showDialog(x);
+                        downloadImage(i, selectedDirectory);
+                    }
+
+                });
+                counter++;
+            }
+        }
+        for (HBox i : hbox) {
+            imgContainer.getChildren().add(i);
+        }
+        imgContainer.setSpacing(10);
+        imgContainer.setPadding(new Insets(10));
+        ScrollPane s1 = new ScrollPane();
+        s1.setContent(imgContainer);
+
+        TextArea reportText = new TextArea();
+        reportText.getText();
+        //reportText.setText(Rad.getRadiologyReport(appt.getApptID()));
+
+        Button cancel = new Button("Cancel");
+        cancel.setId("cancel");
+        HBox btnContainer = new HBox(cancel, confirm, s1);
+        btnContainer.setSpacing(25);
+        y.getStylesheets().add("file:stylesheet.css");
+        x.setScene(new Scene(y));
+
+        cancel.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                x.close();
+            }
+        });
+        confirm.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (reportText.getText().isBlank()) {
+                    Alert a = new Alert(Alert.AlertType.INFORMATION);
+                    a.setTitle("Error");
+                    a.setHeaderText("Try Again");
+                    a.setContentText("Please enter a valid report.\n");
+                    a.show();
+                    return;
+                }
+                editReportOnDatabase(reportText.getText(), appt.getApptID());
+                updateAppointmentStatus(patID, appt.getApptID());
+                x.close();
+                populateTable();
+                main.setCenter(tableContainer);
+            }
+        });
+
+        VBox container = new VBox(s1, label, reportText, btnContainer);
+        y.setCenter(container);
+        x.show();
+    }*/
 
     private void addReportToDatabase(String report, String apptId) {
         String sql = "INSERT INTO report (apptID, writtenreport) VALUES ('" + apptId + "', ?);";
+        try {
+            Connection conn = ds.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, report);
+            stmt.executeUpdate();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    private void editReportOnDatabase(String report, String apptId) {
+        String sql = "UPDATE report (apptID, writtenreport) VALUES ('" + apptId + "', ?);";
         try {
             Connection conn = ds.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -447,6 +712,32 @@ public class Rad extends Stage {
             System.out.println(e.getMessage());
         }
         return list;
+    }
+    
+    private String getRadiologyReport(String apptID) {
+        String value = "";
+
+        String sql = "SELECT writtenReport "
+                + " FROM report"
+                + " WHERE apptID = '" + apptID + "';";
+        try {
+
+            Connection conn = ds.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            //
+            while (rs.next()) {
+                //What I receieve:  text
+                value = rs.getString("writtenReport");
+            }
+            //
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return value;
     }
 
     private void updateAppointmentStatus(String patID, String apptId) {

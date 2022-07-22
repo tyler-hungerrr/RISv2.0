@@ -19,6 +19,7 @@ public class Appointment {
     float total;
     String fullName;
     public Button placeholder = new Button("Placeholder");
+    public Button edit = new Button("Edit");
     public Button button = new Button("Button");
     public Button placeholder1 = new Button("Placeholder");
 
@@ -36,6 +37,10 @@ public class Appointment {
 
     public void setPlaceholder1(Button placeholder1) {
         this.placeholder1 = placeholder1;
+    }
+    
+     public Button getEdit() {
+        return edit;
     }
 
     public Button getButton() {
