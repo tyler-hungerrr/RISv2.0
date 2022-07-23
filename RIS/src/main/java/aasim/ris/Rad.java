@@ -196,13 +196,13 @@ public class Rad extends Stage {
                 Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
                 appt.setFullName(rs.getString("full_name"));
                 
-                appt.placeholder.setText("Edit Report");
-                appt.placeholder.setOnAction(eh -> radPageThree(appt.getPatientID(), appt.getApptID(), appt.getFullName(), appt.getOrder()));
+                
                     
                 appt.placeholder.setText("Create Report");
                 appt.placeholder.setOnAction(eh -> radPageTwo(appt.getPatientID(), appt.getApptID(), appt.getFullName(), appt.getOrder()));
                 
-                
+                appt.placeholder.setText("Edit Report");
+                appt.placeholder.setOnAction(eh -> radPageThree(appt.getPatientID(), appt.getApptID(), appt.getFullName(), appt.getOrder()));
                 
                 list.add(appt);
             }
