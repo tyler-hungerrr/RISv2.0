@@ -382,6 +382,7 @@ public class Billing extends Stage {
             if (p.getByPatient() == 0) {
                 byWhom.setText("Insurance Paid");
             }
+            
             Label tempPaymentDate = new Label(p.getTime());
             float num = -1 * p.getPayment();
             String positive = "";
@@ -399,11 +400,14 @@ public class Billing extends Stage {
                 tempPayment.setId("shadeGreen");
 
             }
+           
+            
 
             grid.add(byWhom, 0, counter);
             grid.add(tempPaymentDate, 1, counter);
             grid.add(tempPayment, 2, counter);
             paybox -= p.getPayment();
+            
             counter++;
         }
         bp.setCenter(sp);
