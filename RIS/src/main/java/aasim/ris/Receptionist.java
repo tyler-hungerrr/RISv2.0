@@ -648,7 +648,7 @@ public class Receptionist extends Stage {
     }
 
     private void updateStatus(String status, Appointment appt) {
-        java.sql.Date date=new java.sql.Date(System.currentTimeMillis());
+        java.sql.Time time = new java.sql.Time(System.currentTimeMillis());
         String sql = "UPDATE appointments "
                 + " SET statusCode = "
                 + "     (SELECT statusID FROM statusCode WHERE status = '" + status + "') "
@@ -661,7 +661,7 @@ public class Receptionist extends Stage {
         }
         if (status.contains("Technician")) {
             String sql2 = "UPDATE appointments "
-                //+ " SET techtime = '" + date + "' "
+                //+ " SET techtime = '" + time + "' "
                 + " WHERE appt_id = '" + appt.getApptID() + "';";
             App.executeSQLStatement(sql2);
         }
