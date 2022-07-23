@@ -506,11 +506,11 @@ public class Technician extends Stage {
     }
 
     private void updateAppointmentStatus(String patID, String apptId) {
-        java.sql.Date date=new java.sql.Date(System.currentTimeMillis());
+        java.sql.Time time = new java.sql.Time(System.currentTimeMillis());
 
         String sql = "UPDATE appointments"
                 + " SET statusCode = 4"
-                //+ " SET techtime1 = '" + date + "'"
+                //+ " SET techtime1 = '" + time + "'"
                 + " WHERE appt_id = '" + apptId + "';";
         try {
 
