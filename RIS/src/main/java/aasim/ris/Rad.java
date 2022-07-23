@@ -190,32 +190,27 @@ public class Rad extends Stage {
             ResultSet rs = stmt.executeQuery(sql);
             //
             List<Appointment> list = new ArrayList<Appointment>();
-            List<Appointment> list1 = new ArrayList<Appointment>();
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
                 Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
                 appt.setFullName(rs.getString("full_name"));
+                
+                appt.placeholder.setText("Edit Report");
+                appt.placeholder.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent e) {
+                        radPageThree(appt.getPatientID(), appt.getApptID(), appt.getFullName(), appt.getOrder());
+                        populateTable();  
+                    }
+                    });
+                
+                appt.placeholder.setText("Create Report");
+                appt.placeholder.setOnAction(eh -> radPageTwo(appt.getPatientID(), appt.getApptID(), appt.getFullName(), appt.getOrder()));
+                
+                
+                
                 list.add(appt);
-                list1.add(appt);
-            }
-            for (Appointment z : list) {
-                z.placeholder.setText("Create Report");
-                z.placeholder.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent e) {
-                        radPageTwo(z.getPatientID(), z.getApptID(), z.getFullName(), z.getOrder());
-                    }
-                });
-                z.edit.setText("Edit Report");
-                z.edit.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent e) {
-                        radPageThree(z.getPatientID(), z.getApptID(), z.getFullName(), z.getOrder());
-                        
-                    }
-                });
-                        
             }
             flAppointment = new FilteredList(FXCollections.observableList(list), p -> true);
             appointmentsTable.getItems().addAll(flAppointment);
