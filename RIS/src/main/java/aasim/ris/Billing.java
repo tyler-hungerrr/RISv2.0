@@ -585,18 +585,41 @@ public class Billing extends Stage {
 
     }
     private void modifyBill(Appointment appt) {
-       Stage x = new Stage();
+      Stage x = new Stage();
         VBox container = new VBox();
-        Scene scene2 = new Scene(container);
-        scene2.getStylesheets().add("file:stylesheet.css");
-        x.setScene(scene2);
+        Scene scene = new Scene(container);
+        scene.getStylesheets().add("file:stylesheet.css");
+        x.setScene(scene);
 
-        HBox howdy = new HBox();
-        Label enterpay2 = new Label("Enter modification here");
-        TextField ep2 = new TextField();
-        Button c = new Button("Submit");
-        howdy.getChildren().addAll(enterpay2, ep2, c);
-        container.getChildren().addAll(howdy);
+        HBox hello = new HBox();
+        Label enterpay = new Label("Enter Payment Here");
+        TextField ep = new TextField();
+        ComboBox dropdown = new ComboBox();
+        dropdown.getItems().addAll("Patient Discount", "Fee");
+        dropdown.setValue("Patient Discount");
+        Button b = new Button("Submit");
+        hello.getChildren().addAll(enterpay, ep, dropdown, b);
+        container.getChildren().addAll(hello);
+        b.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent eh) {
+                if (!InputValidation.validatePayment(ep.getText())) {
+
+                    return;
+
+                }
+                String sql = "";
+                if (dropdown.getValue().toString().equals("Patient Discount")) {
+                    sql = "INSERT INTO patientPayments(apptID, time, patientPayment, byPatient) VALUES ('" + appt.getApptID() + "', '" + LocalDate.now() + "' , '" + ep.getText() + "', '1' )";
+                } else {
+                    sql = "INSERT INTO patientPayments(apptID, time, patientPayment, byPatient) VALUES ('" + appt.getApptID() + "', '" + LocalDate.now() + "' , '" + ep.getText() + "', '0' )";
+                }
+                App.executeSQLStatement(sql);
+                x.close();
+                //sql = "INSERT INTO patientPayments(apptID, time, patientPayment, byPatient) VALUES ('"+appt.getApptID()+"', '"+LocalDate.now() +"' , '"+ep.getText()+"', '1' )";
+            }
+        });
+        x.showAndWait();
       };
 
     private void makePayment(Appointment appt) {
