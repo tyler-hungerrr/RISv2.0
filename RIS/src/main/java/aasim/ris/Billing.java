@@ -67,6 +67,7 @@ public class Billing extends Stage {
 
     //Buttons
     Button refreshTable = new Button("Refresh Appointments");
+  
     //Containers
     HBox searchContainer = new HBox(choiceBox, search);
     HBox buttonContainer = new HBox(refreshTable, searchContainer);
@@ -426,11 +427,23 @@ public class Billing extends Stage {
                 viewBill(appt);
             }
         });
+        Button modifyBill = new Button("Modify Bill");
+        modifyBill.setId("Bill is modified");
+        modifyBill.setOnAction(new EventHandler<ActionEvent> () {
+            @Override
+            public void handle(ActionEvent eh) {
+                modifyBill(appt);
+                x.close();
+                viewBill(appt);
+            }
+        });
+       
+        
         HBox footer = new HBox();
         Label blank = new Label("Total Bill Remaining: ");
         Label tc = new Label("" + paybox);
 
-        footer.getChildren().addAll(btn, blank, tc, btn1);
+        footer.getChildren().addAll(btn, blank, tc, btn1, modifyBill);
         bp.setBottom(footer);
 //end footer
         x.show();
@@ -571,6 +584,20 @@ public class Billing extends Stage {
         return value;
 
     }
+    private void modifyBill(Appointment appt) {
+       Stage x = new Stage();
+        VBox container = new VBox();
+        Scene scene2 = new Scene(container);
+        scene2.getStylesheets().add("file:stylesheet.css");
+        x.setScene(scene2);
+
+        HBox howdy = new HBox();
+        Label enterpay2 = new Label("Enter modification here");
+        TextField ep2 = new TextField();
+        Button c = new Button("Submit");
+        howdy.getChildren().addAll(enterpay2, ep2, c);
+        container.getChildren().addAll(howdy);
+      };
 
     private void makePayment(Appointment appt) {
         Stage x = new Stage();
@@ -609,6 +636,8 @@ public class Billing extends Stage {
         });
         x.showAndWait();
     }
+    
+
 
     private void removeAppointment(Appointment appt) {
         String sql = "UPDATE appointments SET viewable = 0 WHERE appt_id = '" + appt.getApptID() + "';";
@@ -621,5 +650,9 @@ public class Billing extends Stage {
         x.show();
         x.setMaximized(true);
         this.close();
+    }
+
+    private Scene Scene(VBox container2) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
