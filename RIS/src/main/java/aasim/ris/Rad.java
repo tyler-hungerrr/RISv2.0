@@ -158,7 +158,7 @@ public class Rad extends Stage {
         orderIDCol.setCellValueFactory(new PropertyValueFactory<>("order"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("statusAsLabel"));
         reportCol.setCellValueFactory(new PropertyValueFactory<>("placeholder"));
-        reportCol2.setCellValueFactory(new PropertyValueFactory<>("report"));
+        reportCol2.setCellValueFactory(new PropertyValueFactory<>("placeholder1"));
 
         //Couldn't put all the styling
 //        patientIDCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.09));
@@ -195,16 +195,17 @@ public class Rad extends Stage {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
                 Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
                 appt.setFullName(rs.getString("full_name"));
-                
-                
                     
                 appt.placeholder.setText("Create Report");
+                appt.placeholder.setId("complete");
                 appt.placeholder.setOnAction(eh -> radPageTwo(appt.getPatientID(), appt.getApptID(), appt.getFullName(), appt.getOrder()));
                 
-                appt.placeholder.setText("Edit Report");
-                appt.placeholder.setOnAction(eh -> radPageThree(appt.getPatientID(), appt.getApptID(), appt.getFullName(), appt.getOrder()));
-                
                 list.add(appt);
+            }
+            for (Appointment z : list) {
+                z.placeholder1.setText("Edit Report");
+                z.placeholder1.setId("cancel");
+                z.placeholder1.setOnAction(eh -> radPageThree(z.getPatientID(), z.getApptID(), z.getFullName(), z.getOrder()));
             }
             flAppointment = new FilteredList(FXCollections.observableList(list), p -> true);
             appointmentsTable.getItems().addAll(flAppointment);
@@ -558,17 +559,10 @@ public class Rad extends Stage {
     }
     
     private void editReportOnDatabase(String report, String apptId) {
-        String sql = "UPDATE report (apptID, writtenreport) SET ('" + apptId + "', ?);";
-        try {
-            Connection conn = ds.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, report);
-            stmt.executeUpdate();
-            stmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+        String sql = "UPDATE report "
+                + " SET writtenReport  = '" + report + "' "
+                + " WHERE apptId = '" + apptId + "';";
+        App.executeSQLStatement(sql);
     }
 
     private ArrayList<Pair> retrieveUploadedImages(String apptId) {
