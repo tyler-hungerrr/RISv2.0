@@ -411,6 +411,43 @@ public class Billing extends Stage {
             counter++;
         }
         bp.setCenter(sp);
+        
+        counter++;
+        ArrayList<Payment> discountFee = populatePayment(appt.getApptID());
+        for (Payment c : payment) {
+            Label byWhom = new Label("Patient Discount");
+            if (c.getByPatient() == 2) {
+                byWhom.setText("Fee");
+            }
+            
+            Label tempPaymentDate = new Label(c.getTime());
+            float num = -1 * c.getPayment();
+            String positive = "";
+            if (num > 0) {
+                positive = "+";
+            }
+            Label tempPayment = new Label(positive + num);
+            if (num > 0) {
+                byWhom.setId("shadeRed");
+                tempPaymentDate.setId("shadeRed");
+                tempPayment.setId("shadeRed");
+            } else {
+                byWhom.setId("shadeGreen");
+                tempPaymentDate.setId("shadeGreen");
+                tempPayment.setId("shadeGreen");
+
+            }
+           
+            
+
+            grid.add(byWhom, 0, counter);
+            grid.add(tempPaymentDate, 1, counter);
+            grid.add(tempPayment, 2, counter);
+            paybox -= c.getPayment();
+            
+            counter++;
+        }
+        bp.setCenter(sp);
 //end center
 //footer
         Button btn = new Button("Go Back");
@@ -596,7 +633,7 @@ public class Billing extends Stage {
         x.setScene(scene);
 
         HBox hello = new HBox();
-        Label enterpay = new Label("Enter Payment Here");
+        Label enterpay = new Label("Modify Bill by: ");
         TextField ep = new TextField();
         ComboBox dropdown = new ComboBox();
         dropdown.getItems().addAll("Patient Discount", "Fee");
@@ -616,7 +653,7 @@ public class Billing extends Stage {
                 if (dropdown.getValue().toString().equals("Patient Discount")) {
                     sql = "INSERT INTO patientPayments(apptID, time, patientPayment, byPatient) VALUES ('" + appt.getApptID() + "', '" + LocalDate.now() + "' , '" + ep.getText() + "', '1' )";
                 } else {
-                    sql = "INSERT INTO patientPayments(apptID, time, patientPayment, byPatient) VALUES ('" + appt.getApptID() + "', '" + LocalDate.now() + "' , '" + ep.getText() + "', '0' )";
+                    sql = "INSERT INTO patientPayments(apptID, time, patientPayment, byPatient) VALUES ('" + appt.getApptID() + "', '" + LocalDate.now() + "' , '" + ep.getText() + "', '2' )";
                 }
                 App.executeSQLStatement(sql);
                 x.close();
