@@ -661,7 +661,7 @@ public class Receptionist extends Stage {
         }
         if (status.contains("Technician")) {
             String sql2 = "UPDATE appointments "
-                //+ " SET techtime = '" + time + "' "
+                + " SET techtime = '" + time + "' "
                 + " WHERE appt_id = '" + appt.getApptID() + "';";
             App.executeSQLStatement(sql2);
         }
