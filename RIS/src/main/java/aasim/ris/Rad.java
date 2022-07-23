@@ -197,14 +197,8 @@ public class Rad extends Stage {
                 appt.setFullName(rs.getString("full_name"));
                 
                 appt.placeholder.setText("Edit Report");
-                appt.placeholder.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent e) {
-                        radPageThree(appt.getPatientID(), appt.getApptID(), appt.getFullName(), appt.getOrder());
-                        populateTable();  
-                    }
-                    });
-                
+                appt.placeholder.setOnAction(eh -> radPageThree(appt.getPatientID(), appt.getApptID(), appt.getFullName(), appt.getOrder()));
+                    
                 appt.placeholder.setText("Create Report");
                 appt.placeholder.setOnAction(eh -> radPageTwo(appt.getPatientID(), appt.getApptID(), appt.getFullName(), appt.getOrder()));
                 
