@@ -683,9 +683,21 @@ public class Receptionist extends Stage {
 
         //Class Variables
         AddAppointment() {
-            TextField patFullName = new TextField("Full Name");
-            TextField patEmail = new TextField("Email");
+            //TextField patFullName = new TextField("Full Name");
+            ComboBox patFullName = new ComboBox<>();
+            patFullName.setEditable(true);
+            patFullName.toString();
+
+            
+
+            //TextField patEmail = new TextField("Email");
+            ComboBox patEmail = new ComboBox<>();
+            patEmail.setEditable(true);
+            patEmail.toString();
+            
+
             Button check = new Button("Pull Patient Information");
+
             //time && order
             Text text = new Text("Insert Date: ");
             Text text1 = new Text("Insert Time (HH:MM): ");
@@ -755,13 +767,13 @@ public class Receptionist extends Stage {
             check.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e) {
-                    if (!InputValidation.validateName(patFullName.getText())) {
+                    if (!InputValidation.validateName(patFullName.getPromptText())) {
                         return;
                     }
-                    if (!InputValidation.validateEmail(patEmail.getText())) {
+                    if (!InputValidation.validateEmail(patEmail.getPromptText())) {
                         return;
                     }
-                    pat = pullPatientInfo(patFullName.getText(), patEmail.getText());
+                    pat = pullPatientInfo(patFullName.getPromptText(), patEmail.getPromptText());
                     if (pat != null) {
                         check.setVisible(false);
                         Text request = new Text("Orders Requested: ");
@@ -866,12 +878,12 @@ public class Receptionist extends Stage {
             return value;
         }
 
-        private Patient pullPatientInfo(String patFullName, String patEmail) {
+        private Patient pullPatientInfo(String string, String string2) {
             Patient temp = null;
 
             String sql = "Select * "
                     + " FROM patients"
-                    + " WHERE email = '" + patEmail + "' AND full_name = '" + patFullName + "';";
+                    + " WHERE email = '" + string2 + "' AND full_name = '" + string + "';";
 
             try {
 
