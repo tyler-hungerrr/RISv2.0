@@ -71,7 +71,7 @@ public class Receptionist extends Stage {
     //Search Bar
     FilteredList<Appointment> flAppointment;
     ChoiceBox<String> choiceBox = new ChoiceBox();
-    TextField search = new TextField("Search Appointments");
+    TextField search = new TextField("");
 
     //Buttons
     Button addAppointment = new Button("Add Appointment");
