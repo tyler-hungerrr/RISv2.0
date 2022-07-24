@@ -681,22 +681,93 @@ public class Receptionist extends Stage {
         ArrayList<String> orders = new ArrayList<String>();
         DatePicker datePicker = new DatePicker();
 
+    
+
         //Class Variables
         AddAppointment() {
+            
             //TextField patFullName = new TextField("Full Name");
             ComboBox patFullName = new ComboBox<>();
             patFullName.setEditable(true);
             patFullName.toString();
 
+           /* 
+            
+            
+
+            
+            ArrayList patientName = new ArrayList<>();
+            ArrayList patientemail = new ArrayList<>();
+
+            */
             
 
             //TextField patEmail = new TextField("Email");
+
             ComboBox patEmail = new ComboBox<>();
             patEmail.setEditable(true);
             patEmail.toString();
             
 
+
             Button check = new Button("Pull Patient Information");
+             
+            /*
+            
+
+            
+
+            String sqlnames = "Select * "
+                    + " FROM patients"
+                    + " WHERE email = '" + patEmail + "';";
+
+                    try
+                    {
+                        Connection conn = ds.getConnection();
+    
+                        Statement stmt = conn.createStatement();
+                        ResultSet rs = stmt.executeQuery(sqlnames);
+    
+    
+                        while (rs.next())
+                            {
+                                patientName.add(rs.getString("name"));
+                            }
+    
+                        rs.close();
+                        stmt.close();
+                        conn.close();
+    
+                    } catch (SQLException e) {
+                        System.out.println(e.getMessage());
+                    }
+
+            String sqlemail = "Select * "
+                    + " FROM patients"
+                    + " WHERE email = '" + patEmail + "';";
+
+                    try
+                    {
+                        Connection conn = ds.getConnection();
+    
+                        Statement stmt = conn.createStatement();
+                        ResultSet rs = stmt.executeQuery(sqlemail);
+    
+    
+                        while (rs.next())
+                            {
+                                patientemail.add(rs.getString("email"));
+                            }
+    
+                        rs.close();
+                        stmt.close();
+                        conn.close();
+    
+                    } catch (SQLException e) {
+                        System.out.println(e.getMessage());
+                    }
+
+                    */
 
             //time && order
             Text text = new Text("Insert Date: ");
@@ -767,6 +838,10 @@ public class Receptionist extends Stage {
             check.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e) {
+
+                    System.out.println(patFullName);
+                    System.out.println(patEmail);
+
                     if (!InputValidation.validateName(patFullName.getPromptText())) {
                         return;
                     }
@@ -774,6 +849,10 @@ public class Receptionist extends Stage {
                         return;
                     }
                     pat = pullPatientInfo(patFullName.getPromptText(), patEmail.getPromptText());
+
+                    
+
+
                     if (pat != null) {
                         check.setVisible(false);
                         Text request = new Text("Orders Requested: ");
@@ -903,6 +982,38 @@ public class Receptionist extends Stage {
                 System.out.println(e.getMessage());
             }
             return temp;
+        }
+
+        private ArrayList getPatientName(String patFullName) {
+
+            String sql = "Select orderCodes.orders "
+                    + " FROM patientOrders "
+                    + " INNER JOIN orderCodes ON patientOrders.orderCodeID = orderCodes.orderID "
+                    + " WHERE patientID = '" + patFullName +"';";
+            
+            ArrayList patientName = new ArrayList<>();
+
+            try
+                {
+                    Connection conn = ds.getConnection();
+
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql);
+
+
+                    while (rs.next())
+                        {
+                            patientName.add(rs.getString("orders"));
+                        }
+
+                    rs.close();
+                    stmt.close();
+                    conn.close();
+
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+                return patientName;
         }
     }
 }
