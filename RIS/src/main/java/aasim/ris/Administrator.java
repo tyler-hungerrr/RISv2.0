@@ -1102,9 +1102,37 @@ public class Administrator extends Stage {
     //</editor-fold>
 //
 //<editor-fold defaultstate="collapsed" desc="Performance Reports Section">
+     private void createTablePerformance() {
+        table.getColumns().clear();
+        //All of the Columns
+        TableColumn userIDCol = new TableColumn("User ID");
+        TableColumn fullNameCol = new TableColumn("Full Name");
+        TableColumn usernameCol = new TableColumn("Username");
+        TableColumn roleCol = new TableColumn("Role");
+        TableColumn reportsCol = new TableColumn("Performance Report");
+
+        //And all of the Value setting
+        userIDCol.setCellValueFactory(new PropertyValueFactory<>("userID"));
+        fullNameCol.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
+        roleCol.setCellValueFactory(new PropertyValueFactory<>("roleVal"));
+        reportsCol.setCellValueFactory(new PropertyValueFactory<>("reportVal"));
+
+        //Couldn't put all the styling
+        userIDCol.prefWidthProperty().bind(table.widthProperty().multiply(0.09));
+        fullNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.2));
+        usernameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.2));
+        roleCol.prefWidthProperty().bind(table.widthProperty().multiply(0.1));
+        reportsCol.prefWidthProperty().bind(table.widthProperty().multiply(0.1));
+        table.setStyle("-fx-background-color: #25A18E; -fx-text-fill: WHITE; ");
+        //Together again
+        table.getColumns().addAll(userIDCol, fullNameCol, usernameCol, roleCol, reportsCol);
+        //Add Status Update Column:
+    }
     private void performancePageView() {
         performanceReportsContainer.getChildren().clear();
         main.setCenter(performanceReportsContainer);
+        createTablePerformance();
         populateTablePerformance();
 
         performanceReportsContainer.getChildren().addAll(table);
@@ -1148,10 +1176,10 @@ public class Administrator extends Stage {
         private void populateTablePerformance(){
         table.getItems().clear();
         //Connect to database
-        String sql = "Select appt_id"
-                + " FROM appointments"
-                + " "
-                + " ORDER BY time ASC;";
+        String sql = "Select users.user_id, users.email, users.full_name, users.username, users.enabled, users.pfp, roles.role as roleID"
+                + " FROM users "
+                + " INNER JOIN roles ON users.role = roles.roleID "
+                + ";";
 
         try {
 
@@ -1159,17 +1187,25 @@ public class Administrator extends Stage {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             //
-            List<Appointment> list = new ArrayList<Appointment>();
+            List<User> list = new ArrayList<User>();
 
             while (rs.next()) {
-                //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
-                appt.setFullName(rs.getString("full_name"));
-                list.add(appt);
+                //What I receieve:  int userID, String email, String fullName, String username, int role, int enabled
+                User user = new User(rs.getString("user_id"), rs.getString("email"), rs.getString("full_name"), rs.getString("username"), 1, rs.getBoolean("enabled"), rs.getString("roleID"));
+                try {
+                    user.setPfp(new Image(new FileInputStream(App.imagePathDirectory + rs.getString("pfp"))));
+                } catch (FileNotFoundException ex) {
+                    user.setPfp(null);
+                }
+                list.add(user);
+            }
+            for (User z : list) {
+                z.placeholder.setText("Update User");
+                z.placeholder.setOnAction(eh -> updateUser(z));
             }
 
-            flAppointment = new FilteredList(FXCollections.observableList(list), p -> true);
-            table.getItems().addAll(flAppointment);
+            flUsers = new FilteredList(FXCollections.observableList(list), p -> true);
+            table.getItems().addAll(flUsers);
             //
             rs.close();
             stmt.close();
