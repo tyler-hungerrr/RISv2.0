@@ -181,11 +181,11 @@ public class ReferralDoctor extends Stage {
         updateStatusCol.setCellValueFactory(new PropertyValueFactory<>("placeholder"));
 
         //Couldn't put the table
-//        patientIDCol.prefWidthProperty().bind(patientsTable.widthProperty().multiply(0.09));
-//        fullNameCol.prefWidthProperty().bind(patientsTable.widthProperty().multiply(0.1));
-//        emailCol.prefWidthProperty().bind(patientsTable.widthProperty().multiply(0.2));
-//        DOBCol.prefWidthProperty().bind(patientsTable.widthProperty().multiply(0.1));
-//        updateStatusCol.prefWidthProperty().bind(patientsTable.widthProperty().multiply(0.5));
+        patientIDCol.prefWidthProperty().bind(patientsTable.widthProperty().multiply(0.09));
+        fullNameCol.prefWidthProperty().bind(patientsTable.widthProperty().multiply(0.1));
+        emailCol.prefWidthProperty().bind(patientsTable.widthProperty().multiply(0.2));
+       DOBCol.prefWidthProperty().bind(patientsTable.widthProperty().multiply(0.1));
+        updateStatusCol.prefWidthProperty().bind(patientsTable.widthProperty().multiply(0.5));
 
         patientsTable.setStyle("-fx-background-color: #25A18E; -fx-text-fill: WHITE; ");
         //back together again
@@ -724,7 +724,7 @@ public class ReferralDoctor extends Stage {
             List<Appointment> list = new ArrayList<Appointment>();
             while (rs.next()) {
                 //What I receieve:  
-                Appointment temp = new Appointment(rs.getString("appt_id"), pat.getPatientID(), rs.getString("time"), rs.getString("status"), getPatOrders(pat.getPatientID(), rs.getString("appt_id")));
+                Appointment temp = new Appointment(rs.getString("appt_id"), pat.getPatientID(), rs.getString("time"), rs.getString("radtime"), rs.getString("radtime1"), rs.getString("techtime"), rs.getString("techtime1"), rs.getString("rectime"), rs.getString("rectime1"), rs.getString("status"), getPatOrders(pat.getPatientID(), rs.getString("appt_id")));
                 list.add(temp);
             }
 

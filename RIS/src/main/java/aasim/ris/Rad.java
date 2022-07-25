@@ -161,9 +161,9 @@ public class Rad extends Stage {
         reportCol2.setCellValueFactory(new PropertyValueFactory<>("placeholder1"));
 
         //Couldn't put all the styling
-//        patientIDCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.09));
-//        fullNameCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.06));
-//        timeCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.2));
+        patientIDCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.09));
+        fullNameCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.06));
+        timeCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.2));
         orderIDCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.3));
         reportCol2.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.05));
         appointmentsTable.setStyle("-fx-background-color: #25A18E; -fx-text-fill: WHITE; ");
@@ -176,7 +176,7 @@ public class Rad extends Stage {
         appointmentsTable.getItems().clear();
         //connects to database
 
-        String sql = "Select appt_id, patient_id, patients.full_name, time, statusCode.status"
+        String sql = "Select appt_id, patient_id, patients.full_name, time, radtime, radtime1, techtime, techtime1, rectime, rectime1, statusCode.status"
                 + " FROM appointments"
                 + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID"
                 + " INNER JOIN patients ON appointments.patient_id = patients.patientID"
@@ -193,7 +193,7 @@ public class Rad extends Stage {
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("radtime"), rs.getString("radtime1"), rs.getString("techtime"), rs.getString("techtime1"), rs.getString("rectime"), rs.getString("rectime1"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
                 appt.setFullName(rs.getString("full_name"));
                     
                 appt.placeholder.setText("Create Report");
@@ -532,7 +532,7 @@ public class Rad extends Stage {
                     return;
                 }
                 editReportOnDatabase(reportText.getText(), apptId);
-                updateAppointmentStatus(patID, apptId);
+                updateAppointmentStatus1(patID, apptId);
                 x.close();
                 populateTable();
                 main.setCenter(tableContainer);
@@ -595,34 +595,30 @@ public class Rad extends Stage {
         }
         return list;
     }
-    
-    private String getRadiologyReport(String apptID) {
-        String value = "";
 
-        String sql = "SELECT writtenReport "
-                + " FROM report"
-                + " WHERE apptID = '" + apptID + "';";
+    private void updateAppointmentStatus(String patID, String apptId) {
+        java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+
+        String sql = "UPDATE appointments"
+                + " SET statusCode = 5"
+                + " WHERE appt_id = '" + apptId + "';";
+        
+        String sq2 = "UPDATE appointments"
+                + " SET radtime1 = '" + date + "'"
+                + " WHERE appt_id = '" + apptId + "';";
         try {
-
             Connection conn = ds.getConnection();
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            //
-            while (rs.next()) {
-                //What I receieve:  text
-                value = rs.getString("writtenReport");
-            }
-            //
-            rs.close();
+            stmt.execute(sql);
+            stmt.execute(sq2);
             stmt.close();
             conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return value;
     }
-
-    private void updateAppointmentStatus(String patID, String apptId) {
+    
+    private void updateAppointmentStatus1(String patID, String apptId) {
 
         String sql = "UPDATE appointments"
                 + " SET statusCode = 5"

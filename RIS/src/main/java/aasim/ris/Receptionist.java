@@ -174,13 +174,13 @@ public class Receptionist extends Stage {
         updateAppt.setCellValueFactory(new PropertyValueFactory<>("placeholder"));
 
         //Set Column Widths
-//        apptIDCol.prefWidthProperty().bind(table.widthProperty().multiply(0.09));
-//        patientIDCol.prefWidthProperty().bind(table.widthProperty().multiply(0.09));
-//        firstNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.1));
-//        timeCol.prefWidthProperty().bind(table.widthProperty().multiply(0.1));
+        apptIDCol.prefWidthProperty().bind(table.widthProperty().multiply(0.09));
+        patientIDCol.prefWidthProperty().bind(table.widthProperty().multiply(0.09));
+        firstNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.1));
+        timeCol.prefWidthProperty().bind(table.widthProperty().multiply(0.1));
         orderCol.prefWidthProperty().bind(table.widthProperty().multiply(0.3));
-//        updateAppt.prefWidthProperty().bind(table.widthProperty().multiply(0.1));
-//        status.prefWidthProperty().bind(table.widthProperty().multiply(0.15));
+        updateAppt.prefWidthProperty().bind(table.widthProperty().multiply(0.1));
+        status.prefWidthProperty().bind(table.widthProperty().multiply(0.15));
         //Add columns to table
         table.getColumns().addAll(apptIDCol, patientIDCol, firstNameCol, timeCol, orderCol, status, updateAppt);
         table.setStyle("-fx-background-color: #25A18E; -fx-text-fill: WHITE; ");
@@ -193,7 +193,7 @@ public class Receptionist extends Stage {
         table.getItems().clear();
         //Connect to database
 
-        String sql = "Select appt_id, patient_id, patients.full_name, time, statusCode.status"
+        String sql = "Select appt_id, patient_id, patients.full_name, time, radtime, radtime1, techtime, techtime1, rectime, rectime1, statusCode.status"
                 + " FROM appointments"
                 + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID "
                 + " INNER JOIN patients ON patients.patientID = appointments.patient_id"
@@ -212,7 +212,7 @@ public class Receptionist extends Stage {
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("radtime"), rs.getString("radtime1"), rs.getString("techtime"), rs.getString("techtime1"), rs.getString("rectime"), rs.getString("rectime1"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
                 appt.setFullName(rs.getString("full_name"));
                 list.add(appt);
             }
@@ -663,7 +663,17 @@ public class Receptionist extends Stage {
             String sql2 = "UPDATE appointments "
                 + " SET techtime = '" + time + "' "
                 + " WHERE appt_id = '" + appt.getApptID() + "';";
+            String sql3 = "UPDATE appointments "
+                + " SET rectime1 = '" + time + "' "
+                + " WHERE appt_id = '" + appt.getApptID() + "';";
             App.executeSQLStatement(sql2);
+            App.executeSQLStatement(sql3);
+        }
+        if (status.contains("Checked")) {
+            String sql4 = "UPDATE appointments "
+                + " SET rectime = '" + time + "' "
+                + " WHERE appt_id = '" + appt.getApptID() + "';";
+            App.executeSQLStatement(sql4);
         }
     }
 

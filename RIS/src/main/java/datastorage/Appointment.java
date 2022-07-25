@@ -15,19 +15,23 @@ import javafx.scene.control.Label;
 public class Appointment {
 
     String apptID, patientID;
-    String time, status, order;
+    String time, radtime, radtime1, techtime, techtime1, rectime, rectime1, status, order;
     float total;
     String fullName;
     public Button placeholder = new Button("Placeholder");
     public Button button = new Button("Button");
     public Button placeholder1 = new Button("Placeholder");
 
-    public Appointment(String apptID, String patientID, String time, String status, String order) {
+    public Appointment(String apptID, String patientID, String time, String radtime, String radtime1, String techtime, String techtime1, String rectime, String rectime1, String status, String order) {
         this.apptID = apptID;
         this.patientID = patientID;
         this.time = time;
-        //this.techtime = techtime;
-        //this.techtime1 = techtime1;
+        this.radtime = radtime;
+        this.radtime1 = radtime1;
+        this.techtime = techtime;
+        this.techtime1 = techtime1;
+        this.rectime = rectime;
+        this.rectime1 = rectime1;
         this.status = status;
         this.order = order;
     }
@@ -84,7 +88,23 @@ public class Appointment {
         this.time = time;
     }
     
-    /*public String getTechTime() {
+    public String getRadTime() {
+        return radtime;
+    }
+
+    public void SetRadTime(String radtime) {
+        this.radtime = radtime;
+    }
+    
+    public String GetRadTime1() {
+        return radtime1;
+    }
+
+    public void SetRadTime1(String radtime1) {
+        this.radtime1 = radtime1;
+    }
+    
+    public String getTechTime() {
         return techtime;
     }
 
@@ -98,7 +118,23 @@ public class Appointment {
 
     public void setTechTime1(String techtime1) {
         this.techtime1 = techtime1;
-    }*/
+    }
+    
+    public String getRecTime() {
+        return rectime;
+    }
+
+    public void setRecTime(String rectime) {
+        this.rectime = rectime;
+    }
+    
+    public String getRecTime1() {
+        return rectime1;
+    }
+
+    public void setRecTime1(String rectime1) {
+        this.rectime1 = rectime1;
+    }
 
     public String getStatus() {
         return status;

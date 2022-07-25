@@ -147,11 +147,11 @@ public class Technician extends Stage {
         updateStatusCol.setCellValueFactory(new PropertyValueFactory<>("placeholder"));
 
         //Couldn't put all the styling
-//        patientIDCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.09));
-//        fullNameCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.06));
-//        timeCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.2));
+        patientIDCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.09));
+        fullNameCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.06));
+        timeCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.2));
         orderIDCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.3));
-//        appointmentsTable.setStyle("-fx-background-color: #25A18E; -fx-text-fill: WHITE; ");
+        appointmentsTable.setStyle("-fx-background-color: #25A18E; -fx-text-fill: WHITE; ");
         //Together again
         appointmentsTable.getColumns().addAll(patientIDCol, fullNameCol, timeCol, orderIDCol, statusCol, updateStatusCol);
         //Add Status Update Column:
@@ -161,7 +161,7 @@ public class Technician extends Stage {
         appointmentsTable.getItems().clear();
         //Connect to database
 
-        String sql = "Select appt_id, patient_id, patients.full_name, time, statusCode.status"
+        String sql = "Select appt_id, patient_id, patients.full_name, time, radtime, radtime1, techtime, techtime1, rectime, rectime1, statusCode.status"
                 + " FROM appointments"
                 + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID"
                 + " INNER JOIN patients ON appointments.patient_id = patients.patientID"
@@ -179,7 +179,7 @@ public class Technician extends Stage {
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("radtime"), rs.getString("radtime1"), rs.getString("techtime"), rs.getString("techtime1"), rs.getString("rectime"), rs.getString("rectime1"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
                 appt.setFullName(rs.getString("full_name"));
                 list.add(appt);
             }
@@ -507,11 +507,18 @@ public class Technician extends Stage {
 
     private void updateAppointmentStatus(String patID, String apptId) {
         java.sql.Time time = new java.sql.Time(System.currentTimeMillis());
+        java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
 
         String sql = "UPDATE appointments"
                 + " SET statusCode = 4"
-                //+ " SET techtime1 = '" + time + "'"
-                //+ " SET radtime = '" + time + "'"
+                + " WHERE appt_id = '" + apptId + "';";
+        
+        String sq2 = "UPDATE appointments"
+                + " SET techtime1 = '" + time + "'"
+                + " WHERE appt_id = '" + apptId + "';";
+        
+        String sq3 = "UPDATE appointments"
+                + " SET radtime = '" + date + "'"
                 + " WHERE appt_id = '" + apptId + "';";
         try {
 
@@ -519,6 +526,8 @@ public class Technician extends Stage {
 
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
+            stmt.execute(sq2);
+            stmt.execute(sq3);
             stmt.close();
             conn.close();
         } catch (SQLException e) {
