@@ -1,4 +1,7 @@
 module aasim.ris {
+    
+    requires  java.desktop;
+    
     //FileUtils
     requires org.apache.commons.io;
     //JavaFX
