@@ -11,14 +11,21 @@ import datastorage.Appointment;
 import datastorage.InputValidation;
 import datastorage.Patient;
 import datastorage.PatientAlert;
+
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLXML;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
@@ -686,88 +693,93 @@ public class Receptionist extends Stage {
         //Class Variables
         AddAppointment() {
             
-            //TextField patFullName = new TextField("Full Name");
-            ComboBox patFullName = new ComboBox<>();
+            TextField patFullName = new TextField("Full Name");
+            TextField patEmail = new TextField("Email");
+
+
+            /*
+            //SQLXML patientNames; //= new ArrayList<>();
+
+            String[] names = new String[25];
+            int numberOfNames = 25;
+
+            String sqlnames = "Select full_name "
+            + " FROM patients";
+
+            try
+            {
+                Connection conn = ds.getConnection();
+
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sqlnames);
+
+
+                while (rs.next())
+                    {
+                    
+                        String patientNames = (rs.getString("full-name"));
+
+                        names[numberOfNames++] = patientNames;
+                        //patientNames.add(rs.getString("name"));
+                    }
+
+                rs.close();
+                stmt.close();
+                conn.close();
+
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
+            JComboBox patFullName = new JComboBox<>(names);
             patFullName.setEditable(true);
-            patFullName.toString();
-
-           /* 
-            
-            
+           
 
             
-            ArrayList patientName = new ArrayList<>();
-            ArrayList patientemail = new ArrayList<>();
+
+
+            String[] emails = new String[25];
+            int numberOfemails = 25;
+
+            String sqlemails = "Select email "
+            + " FROM patients";
+
+            try
+            {
+                Connection conn = ds.getConnection();
+
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sqlemails);
+
+
+                while (rs.next())
+                    {
+                    
+                        String patientemail = (rs.getString("email"));
+
+                        emails[numberOfemails++] = patientemail;
+                        
+                    }
+
+                rs.close();
+                stmt.close();
+                conn.close();
+
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            //ComboBox.setModel(new DefaultComboBoxModel<>(emails))
+
+            JComboBox patEmail = new JComboBox<>(emails);
+            patEmail.setEditable(false);
+            //patEmail.toString();
 
             */
-            
-
-            //TextField patEmail = new TextField("Email");
-
-            ComboBox patEmail = new ComboBox<>();
-            patEmail.setEditable(true);
-            patEmail.toString();
-            
-
 
             Button check = new Button("Pull Patient Information");
-             
-            /*
-            
 
-            
-
-            String sqlnames = "Select * "
-                    + " FROM patients"
-                    + " WHERE email = '" + patEmail + "';";
-
-                    try
-                    {
-                        Connection conn = ds.getConnection();
-    
-                        Statement stmt = conn.createStatement();
-                        ResultSet rs = stmt.executeQuery(sqlnames);
-    
-    
-                        while (rs.next())
-                            {
-                                patientName.add(rs.getString("name"));
-                            }
-    
-                        rs.close();
-                        stmt.close();
-                        conn.close();
-    
-                    } catch (SQLException e) {
-                        System.out.println(e.getMessage());
-                    }
-
-            String sqlemail = "Select * "
-                    + " FROM patients"
-                    + " WHERE email = '" + patEmail + "';";
-
-                    try
-                    {
-                        Connection conn = ds.getConnection();
-    
-                        Statement stmt = conn.createStatement();
-                        ResultSet rs = stmt.executeQuery(sqlemail);
-    
-    
-                        while (rs.next())
-                            {
-                                patientemail.add(rs.getString("email"));
-                            }
-    
-                        rs.close();
-                        stmt.close();
-                        conn.close();
-    
-                    } catch (SQLException e) {
-                        System.out.println(e.getMessage());
-                    }
-
-                    */
+                    
 
             //time && order
             Text text = new Text("Insert Date: ");
@@ -842,13 +854,13 @@ public class Receptionist extends Stage {
                     System.out.println(patFullName);
                     System.out.println(patEmail);
 
-                    if (!InputValidation.validateName(patFullName.getPromptText())) {
+                    if (!InputValidation.validateName(patFullName.getText())) {
                         return;
                     }
-                    if (!InputValidation.validateEmail(patEmail.getPromptText())) {
+                    if (!InputValidation.validateEmail(patEmail.getText())) {
                         return;
                     }
-                    pat = pullPatientInfo(patFullName.getPromptText(), patEmail.getPromptText());
+                    pat = pullPatientInfo(patFullName.getText(), patEmail.getText());
 
                     
 
