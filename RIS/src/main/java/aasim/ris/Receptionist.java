@@ -996,6 +996,8 @@ public class Receptionist extends Stage {
             return temp;
         }
 
+
+        /*
         private ArrayList getPatientName(String patFullName) {
 
             String sql = "Select orderCodes.orders "
@@ -1026,6 +1028,6 @@ public class Receptionist extends Stage {
                     System.out.println(e.getMessage());
                 }
                 return patientName;
-        }
+        }*/
     }
 }
