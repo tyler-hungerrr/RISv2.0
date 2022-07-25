@@ -510,7 +510,8 @@ public class Technician extends Stage {
 
         String sql = "UPDATE appointments"
                 + " SET statusCode = 4"
-                + " SET techtime1 = '" + time + "'"
+                //+ " SET techtime1 = '" + time + "'"
+                //+ " SET radtime = '" + time + "'"
                 + " WHERE appt_id = '" + apptId + "';";
         try {
 
