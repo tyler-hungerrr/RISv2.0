@@ -9,7 +9,7 @@ INSERT INTO roles VALUES ('4', 'Radiologist');
 INSERT INTO roles VALUES ('5', 'Referral Doctor');
 INSERT INTO roles VALUES ('6', 'Biller');
 
-CREATE TABLE appointments ( appt_id INT PRIMARY KEY UNIQUE DEFAULT unique_rowid(), patient_id INT NOT NULL, time VARCHAR(25) NOT NULL, techtime VARCHAR(10) NOT NULL, techtime1 VARCHAR(10) NOT NULL, statusCode INT NOT NULL,  viewable INT DEFAULT 1,  UNIQUE(patient_id, time)  );
+CREATE TABLE appointments ( appt_id INT PRIMARY KEY UNIQUE DEFAULT unique_rowid(), patient_id INT NOT NULL, time VARCHAR(25) NOT NULL, radtime VARCHAR(10) NOT NULL, radtime1 VARCHAR(10) NOT NULL, techtime VARCHAR(8) NOT NULL, techtime1 VARCHAR(8) NOT NULL, rectime VARCHAR(8) NOT NULL, rectime1 VARCHAR(8) NOT NULL, statusCode INT NOT NULL,  viewable INT DEFAULT 1,  UNIQUE(patient_id, time)  );
 
 CREATE TABLE appointmentsOrdersConnector (  apptID INT, orderCodeID INT,  UNIQUE(apptID, orderCodeID)  );
 
