@@ -11,21 +11,14 @@ import datastorage.Appointment;
 import datastorage.InputValidation;
 import datastorage.Patient;
 import datastorage.PatientAlert;
-
-import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLXML;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
@@ -688,99 +681,11 @@ public class Receptionist extends Stage {
         ArrayList<String> orders = new ArrayList<String>();
         DatePicker datePicker = new DatePicker();
 
-    
-
         //Class Variables
         AddAppointment() {
-            
             TextField patFullName = new TextField("Full Name");
             TextField patEmail = new TextField("Email");
-
-
-            /*
-            //SQLXML patientNames; //= new ArrayList<>();
-
-            String[] names = new String[25];
-            int numberOfNames = 25;
-
-            String sqlnames = "Select full_name "
-            + " FROM patients";
-
-            try
-            {
-                Connection conn = ds.getConnection();
-
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery(sqlnames);
-
-
-                while (rs.next())
-                    {
-                    
-                        String patientNames = (rs.getString("full-name"));
-
-                        names[numberOfNames++] = patientNames;
-                        //patientNames.add(rs.getString("name"));
-                    }
-
-                rs.close();
-                stmt.close();
-                conn.close();
-
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-
-
-            JComboBox patFullName = new JComboBox<>(names);
-            patFullName.setEditable(true);
-           
-
-            
-
-
-            String[] emails = new String[25];
-            int numberOfemails = 25;
-
-            String sqlemails = "Select email "
-            + " FROM patients";
-
-            try
-            {
-                Connection conn = ds.getConnection();
-
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery(sqlemails);
-
-
-                while (rs.next())
-                    {
-                    
-                        String patientemail = (rs.getString("email"));
-
-                        emails[numberOfemails++] = patientemail;
-                        
-                    }
-
-                rs.close();
-                stmt.close();
-                conn.close();
-
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-            //ComboBox.setModel(new DefaultComboBoxModel<>(emails))
-
-            JComboBox patEmail = new JComboBox<>(emails);
-            patEmail.setEditable(false);
-            //patEmail.toString();
-
-            */
-
             Button check = new Button("Pull Patient Information");
-
-                    
-
             //time && order
             Text text = new Text("Insert Date: ");
             Text text1 = new Text("Insert Time (HH:MM): ");
@@ -850,10 +755,6 @@ public class Receptionist extends Stage {
             check.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e) {
-
-                    System.out.println(patFullName);
-                    System.out.println(patEmail);
-
                     if (!InputValidation.validateName(patFullName.getText())) {
                         return;
                     }
@@ -861,10 +762,6 @@ public class Receptionist extends Stage {
                         return;
                     }
                     pat = pullPatientInfo(patFullName.getText(), patEmail.getText());
-
-                    
-
-
                     if (pat != null) {
                         check.setVisible(false);
                         Text request = new Text("Orders Requested: ");
@@ -969,12 +866,12 @@ public class Receptionist extends Stage {
             return value;
         }
 
-        private Patient pullPatientInfo(String string, String string2) {
+        private Patient pullPatientInfo(String patFullName, String patEmail) {
             Patient temp = null;
 
             String sql = "Select * "
                     + " FROM patients"
-                    + " WHERE email = '" + string2 + "' AND full_name = '" + string + "';";
+                    + " WHERE email = '" + patEmail + "' AND full_name = '" + patFullName + "';";
 
             try {
 
@@ -995,39 +892,5 @@ public class Receptionist extends Stage {
             }
             return temp;
         }
-
-
-        /*
-        private ArrayList getPatientName(String patFullName) {
-
-            String sql = "Select orderCodes.orders "
-                    + " FROM patientOrders "
-                    + " INNER JOIN orderCodes ON patientOrders.orderCodeID = orderCodes.orderID "
-                    + " WHERE patientID = '" + patFullName +"';";
-            
-            ArrayList patientName = new ArrayList<>();
-
-            try
-                {
-                    Connection conn = ds.getConnection();
-
-                    Statement stmt = conn.createStatement();
-                    ResultSet rs = stmt.executeQuery(sql);
-
-
-                    while (rs.next())
-                        {
-                            patientName.add(rs.getString("orders"));
-                        }
-
-                    rs.close();
-                    stmt.close();
-                    conn.close();
-
-                } catch (SQLException e) {
-                    System.out.println(e.getMessage());
-                }
-                return patientName;
-        }*/
     }
 }
