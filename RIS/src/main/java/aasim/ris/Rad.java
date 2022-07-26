@@ -165,7 +165,7 @@ public class Rad extends Stage {
         fullNameCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.06));
         timeCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.2));
         orderIDCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.3));
-        statusCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.06));
+        statusCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.1));
         reportCol2.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.05));
         appointmentsTable.setStyle("-fx-background-color: #25A18E; -fx-text-fill: WHITE; ");
         //Together again
@@ -601,7 +601,7 @@ public class Rad extends Stage {
         java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
         String time1 = String.valueOf(date);
         
-        String sql = "Select  radtime"
+        String sql = "Select radtime"
                 + " FROM perfevel"
                 + " "
                 + " WHERE apptID  = '" + apptId + "'"
@@ -674,6 +674,7 @@ public class Rad extends Stage {
             Connection conn = ds.getConnection();
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
+            stmt.execute(sql1);
             stmt.execute(sql2);
             stmt.close();
             conn.close();

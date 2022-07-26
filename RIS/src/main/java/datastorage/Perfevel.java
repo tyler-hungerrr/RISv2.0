@@ -4,6 +4,8 @@
  */
 package datastorage;
 
+import java.io.InputStream;
+
 /**
  *
  * @author tyler
@@ -21,8 +23,7 @@ public class Perfevel {
         this.rectime = rectime;
     }
     
-    public Perfevel(int role_id, String radtime) {
-        this.role_id = role_id;
+    public Perfevel(String radtime) {
         this.radtime = radtime;
     }
     

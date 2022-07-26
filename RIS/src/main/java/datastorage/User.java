@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import datastorage.Perfevel;
 
 /**
  *
@@ -78,7 +79,13 @@ public class User {
         this.userID = userID;
         this.fullName = fullName;
         this.role = role;
-        this.enabled = true;
+    }
+    
+    public User(String userID, String fullName, String username, String roleVal) {
+        this.userID = userID;
+        this.fullName = fullName;
+        this.username = username;
+        this.roleVal = roleVal;
     }
 
     public String getUserID() {

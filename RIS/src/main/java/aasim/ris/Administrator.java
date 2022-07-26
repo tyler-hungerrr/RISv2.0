@@ -7,6 +7,7 @@ import datastorage.Order;
 import datastorage.Patient;
 import datastorage.PatientAlert;
 import datastorage.User;
+import datastorage.Perfevel;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
@@ -51,7 +52,7 @@ public class Administrator extends Stage {
     Label appointments = new Label("Appointments");
     Label modalities = new Label("Modalities");
     Label patientAlerts = new Label("Patient Alerts");
-    Label performanceReports = new Label("Performance Reports");
+    Label radPerformanceReports = new Label("Rad Performance Reports");
     Button logOut = new Button("Log Out");
     //End Navbar
 
@@ -62,7 +63,7 @@ public class Administrator extends Stage {
     VBox appointmentsContainer = new VBox();
     VBox modalitiesContainer = new VBox();
     VBox patientAlertsContainer = new VBox();
-    VBox performanceReportsContainer = new VBox();
+    VBox radPerformanceReportsContainer = new VBox();
     //
     //Scene
     BorderPane main = new BorderPane();
@@ -72,6 +73,7 @@ public class Administrator extends Stage {
     private FilteredList<User> flUsers;
     private FilteredList<Patient> flPatient;
     private FilteredList<Appointment> flAppointment;
+    private FilteredList<Perfevel> flPerfevel;
 
     /*
         Administrator Constructor.
@@ -92,7 +94,7 @@ public class Administrator extends Stage {
         pfp.setFitHeight(38);
         username.setId("navbar");
         username.setOnMouseClicked(eh -> userInfo());
-        HBox navButtons = new HBox(users, patients, appointments, modalities, patientAlerts, performanceReports);
+        HBox navButtons = new HBox(users, patients, appointments, modalities, patientAlerts, radPerformanceReports);
         navButtons.setAlignment(Pos.TOP_LEFT);
 //        navButtons.setSpacing(10);
         HBox.setHgrow(navButtons, Priority.ALWAYS);
@@ -105,7 +107,7 @@ public class Administrator extends Stage {
         appointments.setId("navbar");
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
-        performanceReports.setId("navbar");
+        radPerformanceReports.setId("navbar");
         //End navbar
 
         //Center
@@ -116,7 +118,7 @@ public class Administrator extends Stage {
         appointments.setOnMouseClicked(eh -> appointmentsPageView());
         modalities.setOnMouseClicked(eh -> modalitiesPageView());
         patientAlerts.setOnMouseClicked(eh -> patientAlertsPageView());
-        performanceReports.setOnMouseClicked(eh -> performancePageView());
+        radPerformanceReports.setOnMouseClicked(eh -> radPerformancePageView());
 
         //End Center
         //Set Scene and Structure
@@ -242,7 +244,7 @@ public class Administrator extends Stage {
         appointments.setId("navbar");
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
-        performanceReports.setId("navbar");
+        radPerformanceReports.setId("navbar");
 
         //
         //Searchbar Structure
@@ -467,7 +469,7 @@ public class Administrator extends Stage {
         appointments.setId("navbar");
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
-        performanceReports.setId("navbar");
+        radPerformanceReports.setId("navbar");
 
         //Searchbar Structure
         ChoiceBox<String> choiceBox = new ChoiceBox();
@@ -588,7 +590,7 @@ public class Administrator extends Stage {
         appointments.setId("navbar");
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
-        performanceReports.setId("navbar");
+        radPerformanceReports.setId("navbar");
 
         //Searchbar Structure
         ChoiceBox<String> choiceBox = new ChoiceBox();
@@ -736,7 +738,7 @@ public class Administrator extends Stage {
         appointments.setId("navbar");
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
-        performanceReports.setId("navbar");
+        radPerformanceReports.setId("navbar");
 
         addModality.setOnAction(eh -> addModality());
     }
@@ -868,7 +870,7 @@ public class Administrator extends Stage {
         appointments.setId("navbar");
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
-        performanceReports.setId("navbar");
+        radPerformanceReports.setId("navbar");
         addPatientAlert.setOnAction(eh -> addPatientAlert());
     }
 
@@ -1101,8 +1103,8 @@ public class Administrator extends Stage {
     }
     //</editor-fold>
 //
-//<editor-fold defaultstate="collapsed" desc="Performance Reports Section">
-     private void createTablePerformance() {
+//<editor-fold defaultstate="collapsed" desc=" Rad Performance Reports Section">
+     private void createTableRadPerformance() {
         table.getColumns().clear();
         //All of the Columns
         TableColumn userIDCol = new TableColumn("User ID");
@@ -1129,20 +1131,20 @@ public class Administrator extends Stage {
         table.getColumns().addAll(userIDCol, fullNameCol, usernameCol, roleCol, reportsCol);
         //Add Status Update Column:
     }
-    private void performancePageView() {
-        performanceReportsContainer.getChildren().clear();
-        main.setCenter(performanceReportsContainer);
-        createTablePerformance();
-        populateTablePerformance();
+    private void radPerformancePageView() {
+        radPerformanceReportsContainer.getChildren().clear();
+        main.setCenter(radPerformanceReportsContainer);
+        createTableRadPerformance();
+        populateTableRadPerformance();
 
-        performanceReportsContainer.getChildren().addAll(table);
-        performanceReportsContainer.setSpacing(10);
+        radPerformanceReportsContainer.getChildren().addAll(table);
+        radPerformanceReportsContainer.setSpacing(10);
         users.setId("navbar");
         patients.setId("navbar");
         appointments.setId("navbar");
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
-        performanceReports.setId("navbar");
+        radPerformanceReports.setId("navbar");
 
         //Searchbar Structure
         ChoiceBox<String> choiceBox = new ChoiceBox();
@@ -1170,44 +1172,49 @@ public class Administrator extends Stage {
             table.getItems().clear();
             table.getItems().addAll(flUsers);
         });
-        performanceReportsContainer.getChildren().add(searchContainer);
+        radPerformanceReportsContainer.getChildren().add(searchContainer);
     }
         
-        private void populateTablePerformance(){
+        private void populateTableRadPerformance(){
         table.getItems().clear();
         //Connect to database
-        String sql = "Select users.user_id, users.email, users.full_name, users.username, users.enabled, users.pfp, roles.role as roleID"
+        String sql = "Select users.user_id, users.full_name, users.username, roles.role AS role"
                 + " FROM users "
                 + " INNER JOIN roles ON users.role = roles.roleID "
+                + " WHERE roles.roleID = 4"
+                + ";";
+         String sql1 = "Select radtime"
+                + " FROM perfevel "
+                + " "
                 + ";";
 
         try {
-
             Connection conn = ds.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             //ResultSet rs1 = stmt.executeQuery(sql1);
             //
             List<User> list = new ArrayList<User>();
-            //List<Appointment> list1 = new ArrayList<Appointment>();
+            //List<Perfevel> list1 = new ArrayList<Perfevel>();
 
             while (rs.next()) {
-                //What I receieve:  apptId
-                //Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), rs.getString("appt_id"), getRadReport());
-                //What I receieve:  int userID, String email, String fullName, String username, int role
-                User user = new User(rs.getString("user_id"), rs.getString("email"), rs.getString("full_name"), rs.getString("username"), 1, rs.getBoolean("enabled"), rs.getString("roleID"));
                 
+                //What I receieve:  int userID, String email, String fullName, String username, int role
+                User user = new User(rs.getString("user_id"), rs.getString("full_name"), rs.getString("username"), rs.getString("role"));
+                //Perfevel perfevel = new Perfevel(getRadReport(rs1.getString("radtime")));
                 
                 list.add(user);
+                //list1.add(perfevel);
                 //list1.add(appt);
             }
             for (User z : list) {
+                
             }
 
             flUsers = new FilteredList(FXCollections.observableList(list), p -> true);
             table.getItems().addAll(flUsers);
-            //flAppointment1 = new FilteredList(FXCollections.observableList(list1), p -> true);
-            //table.getItems().addAll(flAppointment1);
+            //flPerfevel = new FilteredList(FXCollections.observableList(list1), p -> true);
+            //table.getItems().addAll(flPerfevel);
             //
             rs.close();
             //rs1.close();
@@ -1218,8 +1225,8 @@ public class Administrator extends Stage {
         }
     }
     
-        private String getRadReport() {
-            String sql = "SELECT AVG (radtime) AS total"
+        private String getRadReport(String radtime) {
+            String sql = "SELECT AVG('" + radtime + "') AS total"
                      + " FROM perfevel"
                      + " "
                      + ";";
@@ -1236,6 +1243,7 @@ public class Administrator extends Stage {
             while (rs.next()) {
                 Double count = rs.getDouble("total");
                 total = String.valueOf(count);
+                total = total + " minutes";
             }
             
             //
@@ -1247,63 +1255,6 @@ public class Administrator extends Stage {
         }
         return total;
         }
-        
-        /*private String getTechReport() {
-            String sql = "Select role_id, techtime, techtime1, roles.roleID"
-                + " FROM perfevel"
-                + " INNER JOIN roles ON perfevel.role_id = roles.roleID "
-                + " WHERE roleID = 3"
-                + ";";
-            
-            try {
-
-            Connection conn = ds.getConnection();
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            //
-
-            while (rs.next()) {
-
-                
-            }
-            //
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-           float calc = 0;
-            return calc; 
-        }
-        
-        private String getRecReport() {
-            String sql = "Select role_id, rectime, rectime1, roles.roleID"
-                + " FROM perfevel"
-                + " INNER JOIN roles ON perfevel.role_id = roles.roleID "
-                + " WHERE roleID = 2"
-                + ";";
-            try {
-
-            Connection conn = ds.getConnection();
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            //
-
-            while (rs.next()) {
-
-                
-            }
-            //
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-            float calc = 0;
-            return calc;
-        }*/
 
     
 
