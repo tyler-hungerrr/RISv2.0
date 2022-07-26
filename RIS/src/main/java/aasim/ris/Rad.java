@@ -603,9 +603,9 @@ public class Rad extends Stage {
                 + " SET statusCode = 5"
                 + " WHERE appt_id = '" + apptId + "';";
         
-        String sq2 = "UPDATE appointments"
+        String sq2 = "UPDATE perfevel "
                 + " SET radtime1 = '" + date + "'"
-                + " WHERE appt_id = '" + apptId + "';";
+                + " WHERE apptID = '" + apptId + "';";
         try {
             Connection conn = ds.getConnection();
             Statement stmt = conn.createStatement();

@@ -193,7 +193,7 @@ public class Receptionist extends Stage {
         table.getItems().clear();
         //Connect to database
 
-        String sql = "Select appt_id, patient_id, patients.full_name, time, radtime, radtime1, techtime, techtime1, rectime, rectime1, statusCode.status"
+        String sql = "Select appt_id, patient_id, patients.full_name, time, statusCode.status"
                 + " FROM appointments"
                 + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID "
                 + " INNER JOIN patients ON patients.patientID = appointments.patient_id"
@@ -660,19 +660,19 @@ public class Receptionist extends Stage {
             App.executeSQLStatement(sql1);
         }
         if (status.contains("Technician")) {
-            String sql2 = "UPDATE appointments "
+            String sql2 = "UPDATE perfevel "
                 + " SET techtime = '" + time + "' "
-                + " WHERE appt_id = '" + appt.getApptID() + "';";
-            String sql3 = "UPDATE appointments "
+                + " WHERE apptID = '" + appt.getApptID() + "';";
+            String sql3 = "UPDATE perfevel "
                 + " SET rectime1 = '" + time + "' "
-                + " WHERE appt_id = '" + appt.getApptID() + "';";
+                + " WHERE apptID = '" + appt.getApptID() + "';";
             App.executeSQLStatement(sql2);
             App.executeSQLStatement(sql3);
         }
         if (status.contains("Checked")) {
-            String sql4 = "UPDATE appointments "
+            String sql4 = "UPDATE perfevel "
                 + " SET rectime = '" + time + "' "
-                + " WHERE appt_id = '" + appt.getApptID() + "';";
+                + " WHERE apptID = '" + appt.getApptID() + "';";
             App.executeSQLStatement(sql4);
         }
     }
@@ -834,10 +834,11 @@ public class Receptionist extends Stage {
             String sql = "INSERT INTO appointments(patient_id, time, statusCode)"
                     + " VALUES ('" + patientID + "', '" + time + "', '1');\n";
             App.executeSQLStatement(sql);
-            //String sql3 = "INSERT INTO perfevel(apptID)"
-                    //+ " SELECT appt_id FROM appointments"
-                    //+ " "
-            //App.executeSQLStatement(sql3);
+            String sql3 = "INSERT INTO perfevel(apptID)"
+                    + " SELECT appt_id FROM appointments"
+                    + " WHERE patient_id = '" + patientID + "' AND time = '" + time + "'"
+                    + ";\n";
+            App.executeSQLStatement(sql3);
             for (String x : orders) {
                 String sql1 = "INSERT INTO appointmentsOrdersConnector(apptID, orderCodeID)"
                         + " VALUES ("
