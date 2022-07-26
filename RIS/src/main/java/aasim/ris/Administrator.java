@@ -672,7 +672,7 @@ public class Administrator extends Stage {
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("radtime"), rs.getString("radtime1"), rs.getString("techtime"), rs.getString("techtime1"), rs.getString("rectime"), rs.getString("rectime1"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
                 appt.setFullName(rs.getString("full_name"));
                 list.add(appt);
             }
@@ -1180,17 +1180,43 @@ public class Administrator extends Stage {
                 + " FROM users "
                 + " INNER JOIN roles ON users.role = roles.roleID "
                 + ";";
+        
+        String sq2 = "Select radtime, radtime1, statusCode.status"
+                + " FROM appointments"
+                + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID "
+                + " INNER JOIN patients ON patients.patientID = appointments.patient_id"
+                + " WHERE statusCode < 5"
+                + ";";
+        
+        String sq3 = "Select techtime, techtime1, statusCode.status"
+                + " FROM appointments"
+                + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID "
+                + " INNER JOIN patients ON patients.patientID = appointments.patient_id"
+                + " WHERE statusCode < 4"
+                + ";";
+        
+        String sq4 = "Select rectime, rectime1, statusCode.status"
+                + " FROM appointments"
+                + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID "
+                + " INNER JOIN patients ON patients.patientID = appointments.patient_id"
+                + " WHERE statusCode < 3"
+                + ";";
 
         try {
 
             Connection conn = ds.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
+            ResultSet rs1 = stmt.executeQuery(sq2);
+            ResultSet rs2 = stmt.executeQuery(sq3);
+            ResultSet rs3 = stmt.executeQuery(sq4);
             //
             List<User> list = new ArrayList<User>();
 
             while (rs.next()) {
-                //What I receieve:  int userID, String email, String fullName, String username, int role, int enabled
+                //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                //What I receieve:  int userID, String email, String fullName, String username, int role
                 User user = new User(rs.getString("user_id"), rs.getString("email"), rs.getString("full_name"), rs.getString("username"), 1, rs.getBoolean("enabled"), rs.getString("roleID"));
                 try {
                     user.setPfp(new Image(new FileInputStream(App.imagePathDirectory + rs.getString("pfp"))));
@@ -1200,8 +1226,6 @@ public class Administrator extends Stage {
                 list.add(user);
             }
             for (User z : list) {
-                z.placeholder.setText("Update User");
-                z.placeholder.setOnAction(eh -> updateUser(z));
             }
 
             flUsers = new FilteredList(FXCollections.observableList(list), p -> true);
@@ -1215,6 +1239,15 @@ public class Administrator extends Stage {
         }
     }
     
+        /*private int getRadReport(String radtime, String radtime1) {
+            
+        }
+        private int getTechReport(String techtime, String techtime1) {
+            
+        }
+        private int getRecReport(String rectime, String rectime1) {
+            
+        }*/
 
     
 

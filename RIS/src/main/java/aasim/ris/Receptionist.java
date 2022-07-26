@@ -212,7 +212,7 @@ public class Receptionist extends Stage {
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("radtime"), rs.getString("radtime1"), rs.getString("techtime"), rs.getString("techtime1"), rs.getString("rectime"), rs.getString("rectime1"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
                 appt.setFullName(rs.getString("full_name"));
                 list.add(appt);
             }
@@ -834,6 +834,10 @@ public class Receptionist extends Stage {
             String sql = "INSERT INTO appointments(patient_id, time, statusCode)"
                     + " VALUES ('" + patientID + "', '" + time + "', '1');\n";
             App.executeSQLStatement(sql);
+            //String sql3 = "INSERT INTO perfevel(apptID)"
+                    //+ " SELECT appt_id FROM appointments"
+                    //+ " "
+            //App.executeSQLStatement(sql3);
             for (String x : orders) {
                 String sql1 = "INSERT INTO appointmentsOrdersConnector(apptID, orderCodeID)"
                         + " VALUES ("

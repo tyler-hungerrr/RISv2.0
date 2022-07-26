@@ -179,7 +179,7 @@ public class Technician extends Stage {
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("radtime"), rs.getString("radtime1"), rs.getString("techtime"), rs.getString("techtime1"), rs.getString("rectime"), rs.getString("rectime1"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
                 appt.setFullName(rs.getString("full_name"));
                 list.add(appt);
             }
@@ -513,13 +513,13 @@ public class Technician extends Stage {
                 + " SET statusCode = 4"
                 + " WHERE appt_id = '" + apptId + "';";
         
-        String sq2 = "UPDATE appointments"
+        String sq2 = "UPDATE perfevel"
                 + " SET techtime1 = '" + time + "'"
-                + " WHERE appt_id = '" + apptId + "';";
+                + " WHERE apptID = '" + apptId + "';";
         
-        String sq3 = "UPDATE appointments"
+        String sq3 = "UPDATE perfevel"
                 + " SET radtime = '" + date + "'"
-                + " WHERE appt_id = '" + apptId + "';";
+                + " WHERE apptID = '" + apptId + "';";
         try {
 
             Connection conn = ds.getConnection();

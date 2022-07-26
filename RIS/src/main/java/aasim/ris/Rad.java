@@ -176,7 +176,7 @@ public class Rad extends Stage {
         appointmentsTable.getItems().clear();
         //connects to database
 
-        String sql = "Select appt_id, patient_id, patients.full_name, time, radtime, radtime1, techtime, techtime1, rectime, rectime1, statusCode.status"
+        String sql = "Select appt_id, patient_id, patients.full_name, time, statusCode.status"
                 + " FROM appointments"
                 + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID"
                 + " INNER JOIN patients ON appointments.patient_id = patients.patientID"
@@ -193,7 +193,7 @@ public class Rad extends Stage {
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("radtime"), rs.getString("radtime1"), rs.getString("techtime"), rs.getString("techtime1"), rs.getString("rectime"), rs.getString("rectime1"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
                 appt.setFullName(rs.getString("full_name"));
                     
                 appt.placeholder.setText("Create Report");

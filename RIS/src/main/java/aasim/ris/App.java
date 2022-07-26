@@ -93,17 +93,11 @@ public class App extends Application {
         Creates tables Appointments, AppointmentsOrdersConnector
      */
     public static void createAppointmentTable(String fileName) {
-        //apptId, patientID, fullname, time, techtime, techtime1, address, insurance, referral, status, order
+        //apptId, patientID, fullname, time, address, insurance, referral, status, order
         String sql = "CREATE TABLE appointments (\n"
                 + "	appt_id INT PRIMARY KEY UNIQUE DEFAULT unique_rowid(),\n"
                 + "	patient_id INT NOT NULL,\n"
                 + "	time VARCHAR(25) NOT NULL,\n"
-                + "	radtime VARCHAR(10),\n"
-                + "	radtime1 VARCHAR(10),\n"
-                + "	techtime VARCHAR(8),\n"
-                + "	techtime1 VARCHAR(8),\n"
-                + "	rectime VARCHAR(8),\n"
-                + "	rectime1 VARCHAR(8),\n"
                 + "     statusCode INT NOT NULL, "
                 + "     viewable INT DEFAULT 1, "
                 + "     UNIQUE(patient_id, time) "
@@ -115,6 +109,24 @@ public class App extends Application {
                 + "     UNIQUE(apptID, orderCodeID) "
                 + ");";
         executeSQLStatement(sql1);
+    }
+    
+    /*
+        Creates tables perfevel
+     */
+    public static void createPerfevelTable (String fileName) {
+        //apptId, patientID, fullname, time, address, insurance, referral, status, order
+        String sql = "CREATE TABLE appointments (\n"
+                + "	role_id INT PRIMARY KEY,\n"
+                + "	apptID INT,\n"
+                + "	radtime VARCHAR(10),\n"
+                + "	radtime1 VARCHAR(10),\n"
+                + "	techtime VARCHAR(8),\n"
+                + "	techtime1 VARCHAR(8),\n"
+                + "	rectime VARCHAR(8),\n"
+                + "	rectime1 VARCHAR(8),\n"
+                + ");";
+        executeSQLStatement(sql);
     }
 
     /*
