@@ -161,7 +161,7 @@ public class Technician extends Stage {
         appointmentsTable.getItems().clear();
         //Connect to database
 
-        String sql = "Select appt_id, patient_id, patients.full_name, time, radtime, radtime1, techtime, techtime1, rectime, rectime1, statusCode.status"
+        String sql = "Select appt_id, patient_id, patients.full_name, time, statusCode.status"
                 + " FROM appointments"
                 + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID"
                 + " INNER JOIN patients ON appointments.patient_id = patients.patientID"
