@@ -212,7 +212,7 @@ public class Receptionist extends Stage {
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")), rs.getString("time"));
                 appt.setFullName(rs.getString("full_name"));
                 list.add(appt);
             }
@@ -664,7 +664,7 @@ public class Receptionist extends Stage {
                 + " SET techtime = '" + time + "' "
                 + " WHERE apptID = '" + appt.getApptID() + "';";
             String sql3 = "UPDATE perfevel "
-                + " SET rectime1 = '" + time + "' "
+                + " SET rectime = '" + time + "' "
                 + " WHERE apptID = '" + appt.getApptID() + "';";
             App.executeSQLStatement(sql2);
             App.executeSQLStatement(sql3);

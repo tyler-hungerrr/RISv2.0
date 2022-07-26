@@ -655,7 +655,7 @@ public class Administrator extends Stage {
     private void populateTableAppointments() {
         table.getItems().clear();
         //Connect to database
-        String sql = "Select appt_id, patient_id, patients.full_name, time, radtime, radtime1, techtime, techtime1, rectime, rectime1, statusCode.status"
+        String sql = "Select appt_id, patient_id, patients.full_name, time, statusCode.status"
                 + " FROM appointments"
                 + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID "
                 + " INNER JOIN patients ON patients.patientID = appointments.patient_id"
@@ -672,7 +672,7 @@ public class Administrator extends Stage {
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")),rs.getString("time"));
                 appt.setFullName(rs.getString("full_name"));
                 list.add(appt);
             }
@@ -1116,7 +1116,7 @@ public class Administrator extends Stage {
         fullNameCol.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         roleCol.setCellValueFactory(new PropertyValueFactory<>("roleVal"));
-        reportsCol.setCellValueFactory(new PropertyValueFactory<>("reportVal"));
+        reportsCol.setCellValueFactory(new PropertyValueFactory<>("Perfevel"));
 
         //Couldn't put all the styling
         userIDCol.prefWidthProperty().bind(table.widthProperty().multiply(0.09));
@@ -1180,58 +1180,37 @@ public class Administrator extends Stage {
                 + " FROM users "
                 + " INNER JOIN roles ON users.role = roles.roleID "
                 + ";";
-        
-        String sq2 = "Select radtime, radtime1, statusCode.status"
-                + " FROM appointments"
-                + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID "
-                + " INNER JOIN patients ON patients.patientID = appointments.patient_id"
-                + " WHERE statusCode < 5"
-                + ";";
-        
-        String sq3 = "Select techtime, techtime1, statusCode.status"
-                + " FROM appointments"
-                + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID "
-                + " INNER JOIN patients ON patients.patientID = appointments.patient_id"
-                + " WHERE statusCode < 4"
-                + ";";
-        
-        String sq4 = "Select rectime, rectime1, statusCode.status"
-                + " FROM appointments"
-                + " INNER JOIN statusCode ON appointments.statusCode = statusCode.statusID "
-                + " INNER JOIN patients ON patients.patientID = appointments.patient_id"
-                + " WHERE statusCode < 3"
-                + ";";
 
         try {
 
             Connection conn = ds.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            ResultSet rs1 = stmt.executeQuery(sq2);
-            ResultSet rs2 = stmt.executeQuery(sq3);
-            ResultSet rs3 = stmt.executeQuery(sq4);
+            //ResultSet rs1 = stmt.executeQuery(sql1);
             //
             List<User> list = new ArrayList<User>();
+            //List<Appointment> list1 = new ArrayList<Appointment>();
 
             while (rs.next()) {
-                //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                //What I receieve:  apptId
+                //Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), rs.getString("appt_id"), getRadReport());
                 //What I receieve:  int userID, String email, String fullName, String username, int role
                 User user = new User(rs.getString("user_id"), rs.getString("email"), rs.getString("full_name"), rs.getString("username"), 1, rs.getBoolean("enabled"), rs.getString("roleID"));
-                try {
-                    user.setPfp(new Image(new FileInputStream(App.imagePathDirectory + rs.getString("pfp"))));
-                } catch (FileNotFoundException ex) {
-                    user.setPfp(null);
-                }
+                
+                
                 list.add(user);
+                //list1.add(appt);
             }
             for (User z : list) {
             }
 
             flUsers = new FilteredList(FXCollections.observableList(list), p -> true);
             table.getItems().addAll(flUsers);
+            //flAppointment1 = new FilteredList(FXCollections.observableList(list1), p -> true);
+            //table.getItems().addAll(flAppointment1);
             //
             rs.close();
+            //rs1.close();
             stmt.close();
             conn.close();
         } catch (SQLException e) {
@@ -1239,14 +1218,91 @@ public class Administrator extends Stage {
         }
     }
     
-        /*private int getRadReport(String radtime, String radtime1) {
+        private String getRadReport() {
+            String sql = "SELECT AVG (radtime) AS total"
+                     + " FROM perfevel"
+                     + " "
+                     + ";";
             
+            String total = "";
+        try {
+
+            Connection conn = ds.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            //
+            
+
+            while (rs.next()) {
+                Double count = rs.getDouble("total");
+                total = String.valueOf(count);
+            }
+            
+            //
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
-        private int getTechReport(String techtime, String techtime1) {
-            
+        return total;
         }
-        private int getRecReport(String rectime, String rectime1) {
+        
+        /*private String getTechReport() {
+            String sql = "Select role_id, techtime, techtime1, roles.roleID"
+                + " FROM perfevel"
+                + " INNER JOIN roles ON perfevel.role_id = roles.roleID "
+                + " WHERE roleID = 3"
+                + ";";
             
+            try {
+
+            Connection conn = ds.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            //
+
+            while (rs.next()) {
+
+                
+            }
+            //
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+           float calc = 0;
+            return calc; 
+        }
+        
+        private String getRecReport() {
+            String sql = "Select role_id, rectime, rectime1, roles.roleID"
+                + " FROM perfevel"
+                + " INNER JOIN roles ON perfevel.role_id = roles.roleID "
+                + " WHERE roleID = 2"
+                + ";";
+            try {
+
+            Connection conn = ds.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            //
+
+            while (rs.next()) {
+
+                
+            }
+            //
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+            float calc = 0;
+            return calc;
         }*/
 
     

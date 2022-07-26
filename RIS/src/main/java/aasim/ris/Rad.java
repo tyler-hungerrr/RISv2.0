@@ -165,6 +165,7 @@ public class Rad extends Stage {
         fullNameCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.06));
         timeCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.2));
         orderIDCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.3));
+        statusCol.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.06));
         reportCol2.prefWidthProperty().bind(appointmentsTable.widthProperty().multiply(0.05));
         appointmentsTable.setStyle("-fx-background-color: #25A18E; -fx-text-fill: WHITE; ");
         //Together again
@@ -193,7 +194,7 @@ public class Rad extends Stage {
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")), rs.getString("time"));
                 appt.setFullName(rs.getString("full_name"));
                     
                 appt.placeholder.setText("Create Report");
@@ -598,19 +599,82 @@ public class Rad extends Stage {
 
     private void updateAppointmentStatus(String patID, String apptId) {
         java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+        String time1 = String.valueOf(date);
+        
+        String sql = "Select  radtime"
+                + " FROM perfevel"
+                + " "
+                + " WHERE apptID  = '" + apptId + "'"
+                + ";";
+        
+        Double calc = 0.0;
+        String total = "";
+        String time;
+        
+        try {
 
-        String sql = "UPDATE appointments"
+            Connection conn = ds.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            //
+            
+
+            while (rs.next()) {
+                time = rs.getString("radtime");
+                String time1_1 = time.substring(0, 3);
+                String time1_2 = time.substring(5, 6);
+                String time1_3 = time.substring(8, 9);
+                String time2_1 = time1.substring(0, 3);
+                String time2_2 = time1.substring(5, 6);
+                String time2_3 = time1.substring(8, 9);
+                Integer Time1_1 = Integer.valueOf(time1_1);
+                Integer Time1_2 = Integer.valueOf(time1_2);
+                Integer Time1_3 = Integer.valueOf(time1_3);
+                Integer Time2_1 = Integer.valueOf(time2_1);
+                Integer Time2_2 = Integer.valueOf(time2_2);
+                Integer Time2_3 = Integer.valueOf(time2_3);
+                Integer calc1 = Time2_1 - Time1_1;
+                Integer calc2 = Time2_2 - Time1_2;
+                Integer calc3 = Time2_3 - Time1_3;
+                Integer gcalc = 0;
+                Integer hcalc = 0;
+                Integer jcalc = 0;
+                if(!calc1.equals(0)) {
+                    gcalc = gcalc + calc1;
+                    gcalc = gcalc * 365;
+                }
+                if(!calc2.equals(0)) {
+                    hcalc = hcalc + calc2;
+                    hcalc = hcalc * 31;
+                }
+                if(!calc3.equals(0)) 
+                    jcalc = jcalc + calc3;
+                
+                Integer ccalc = gcalc + hcalc + jcalc;
+                calc = Double.valueOf(ccalc);
+                total = String.valueOf(calc);
+            }
+            
+            //
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        String sql1 = "UPDATE appointments"
                 + " SET statusCode = 5"
                 + " WHERE appt_id = '" + apptId + "';";
         
-        String sq2 = "UPDATE perfevel "
-                + " SET radtime1 = '" + date + "'"
+        String sql2 = "UPDATE perfevel "
+                + " SET radtime = '" + total + "'"
                 + " WHERE apptID = '" + apptId + "';";
         try {
             Connection conn = ds.getConnection();
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
-            stmt.execute(sq2);
+            stmt.execute(sql2);
             stmt.close();
             conn.close();
         } catch (SQLException e) {

@@ -724,7 +724,7 @@ public class ReferralDoctor extends Stage {
             List<Appointment> list = new ArrayList<Appointment>();
             while (rs.next()) {
                 //What I receieve:  
-                Appointment temp = new Appointment(rs.getString("appt_id"), pat.getPatientID(), rs.getString("time"), rs.getString("status"), getPatOrders(pat.getPatientID(), rs.getString("appt_id")));
+                Appointment temp = new Appointment(rs.getString("appt_id"), pat.getPatientID(), rs.getString("time"), rs.getString("status"), getPatOrders(pat.getPatientID(), rs.getString("appt_id")), rs.getString("time"));
                 list.add(temp);
             }
 

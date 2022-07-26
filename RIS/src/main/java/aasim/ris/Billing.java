@@ -224,7 +224,7 @@ public class Billing extends Stage {
 
             while (rs.next()) {
                 //What I receieve:  apptId, patientID, fullname, time, address, insurance, referral, status, order
-                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")));
+                Appointment appt = new Appointment(rs.getString("appt_id"), rs.getString("patient_id"), rs.getString("time"), rs.getString("status"), getPatOrders(rs.getString("patient_id"), rs.getString("appt_id")), rs.getString("time"));
                 appt.setFullName(rs.getString("full_name"));
                 appt.setTotal(calculateTotalCost(appt));
                 appt.button.setText("Make Payment");

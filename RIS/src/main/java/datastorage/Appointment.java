@@ -15,19 +15,20 @@ import javafx.scene.control.Label;
 public class Appointment {
 
     String apptID, patientID;
-    String time, status, order;
+    String time, status, order, calc;
     float total;
     String fullName;
     public Button placeholder = new Button("Placeholder");
     public Button button = new Button("Button");
     public Button placeholder1 = new Button("Placeholder");
 
-    public Appointment(String apptID, String patientID, String time, String status, String order) {
+    public Appointment(String apptID, String patientID, String time, String status, String order, String calc) {
         this.apptID = apptID;
         this.patientID = patientID;
         this.time = time;
         this.status = status;
         this.order = order;
+        this.calc = calc;
     }
 
     public Button getPlaceholder1() {
@@ -44,6 +45,14 @@ public class Appointment {
 
     public void setButton(Button button) {
         this.button = button;
+    }
+    
+     public String getCalc() {
+        return calc;
+    }
+
+    public void setCalc(String calc) {
+        this.calc = calc;
     }
 
     public float getTotal() {

@@ -11,32 +11,27 @@ package datastorage;
 public class Perfevel {
     
     private int role_id, apptID;
-    private String radtime, radtime1, techtime, techtime1, rectime, rectime1;
+    private String radtime, techtime, rectime;
     
-     public Perfevel(int role_id,int apptID, String radtime, String radtime1, String techtime, String techtime1, String rectime, String rectime1) {
+    public Perfevel(int role_id,int apptID, String radtime, String techtime, String rectime) {
         this.role_id = role_id;
         this.apptID = apptID;
         this.radtime = radtime;
-        this.radtime1 = radtime1;
         this.techtime = techtime;
-        this.techtime1 = techtime1;
         this.rectime = rectime;
-        this.rectime1 = rectime1;
     }
+    
+    public Perfevel(int role_id, String radtime) {
+        this.role_id = role_id;
+        this.radtime = radtime;
+    }
+    
       public String getRadTime() {
         return radtime;
     }
 
     public void SetRadTime(String radtime) {
         this.radtime = radtime;
-    }
-    
-    public String getRadTime1() {
-        return radtime1;
-    }
-
-    public void setRadTime1(String radtime1) {
-        this.radtime1 = radtime1;
     }
     
     public String getTechTime() {
@@ -47,14 +42,6 @@ public class Perfevel {
         this.techtime = techtime;
     }
     
-    public String getTechTime1() {
-        return techtime1;
-    }
-
-    public void setTechTime1(String techtime1) {
-        this.techtime1 = techtime1;
-    }
-    
     public String getRecTime() {
         return rectime;
     }
@@ -63,13 +50,6 @@ public class Perfevel {
         this.rectime = rectime;
     }
     
-    public String getRecTime1() {
-        return rectime1;
-    }
-
-    public void setRecTime1(String rectime1) {
-        this.rectime1 = rectime1;
-    }
     public int getRoleId() {
         return role_id;
     }
