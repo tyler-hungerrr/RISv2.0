@@ -1118,7 +1118,7 @@ public class Administrator extends Stage {
         fullNameCol.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         roleCol.setCellValueFactory(new PropertyValueFactory<>("roleVal"));
-        reportsCol.setCellValueFactory(new PropertyValueFactory<>(""));
+        reportsCol.setCellValueFactory(new PropertyValueFactory<>("radtime"));
 
         //Couldn't put all the styling
         userIDCol.prefWidthProperty().bind(table.widthProperty().multiply(0.09));
