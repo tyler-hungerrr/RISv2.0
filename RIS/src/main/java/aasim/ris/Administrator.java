@@ -1118,7 +1118,7 @@ public class Administrator extends Stage {
         fullNameCol.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         roleCol.setCellValueFactory(new PropertyValueFactory<>("roleVal"));
-        reportsCol.setCellValueFactory(new PropertyValueFactory<>("radtime"));
+        reportsCol.setCellValueFactory(new PropertyValueFactory<>(""));
 
         //Couldn't put all the styling
         userIDCol.prefWidthProperty().bind(table.widthProperty().multiply(0.09));
@@ -1183,37 +1183,33 @@ public class Administrator extends Stage {
                 + " INNER JOIN roles ON users.role = roles.roleID "
                 + " WHERE roles.roleID = 4"
                 + ";";
-        String sql1 = "Select radtime"
-                + " FROM perfevel "
-                + " WHERE role_id = 5"
-                + ";";
 
         try {
             Connection conn = ds.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            ResultSet rs1 = stmt.executeQuery(sql1);
+            //ResultSet rs1 = stmt.executeQuery(sql1);
             //
             List<User> list = new ArrayList<User>();
-            List<Perfevel> list1 = new ArrayList<Perfevel>();
+            //List<Perfevel> list1 = new ArrayList<Perfevel>();
 
-            while (rs1.next()) {
+            while (rs.next()) {
                 
                 //What I receieve:  int userID, String email, String fullName, String username, int role
                 User user = new User(rs.getString("user_id"), rs.getString("full_name"), rs.getString("username"), rs.getString("role"));
-                Perfevel perfevel = new Perfevel(getRadReport(rs1.getString("radtime")));
+                //Perfevel perfevel = new Perfevel(getRadReport());
                 
                 list.add(user);
-                list1.add(perfevel);
+                //list1.add(perfevel);
             }
 
             flUsers = new FilteredList(FXCollections.observableList(list), p -> true);
-            
-            flPerfevel = new FilteredList(FXCollections.observableList(list1), p -> true);
-            table.getItems().addAll(flUsers, flPerfevel);
+            table.getItems().addAll(flUsers);
+            //flPerfevel = new FilteredList(FXCollections.observableList(list1), p -> true);
+            //table.getItems().addAll(flPerfevel);
             //
             rs.close();
-            rs1.close();
+            //rs1.close();
             stmt.close();
             conn.close();
         } catch (SQLException e) {
@@ -1221,8 +1217,8 @@ public class Administrator extends Stage {
         }
     }
     
-        private String getRadReport(String radtime) {
-            String sql = "SELECT AVG('" + radtime + "') AS days"
+        private String getRadReport() {
+            String sql = "SELECT AVG (radtime1) AS days"
                      + " FROM perfevel"
                      + " "
                      + ";";
@@ -1237,7 +1233,7 @@ public class Administrator extends Stage {
             
 
             while (rs.next()) {
-                total = rs.getString("days") + " days";
+                total = rs.getDouble("days") + " days";
             }
             
             //

@@ -122,6 +122,9 @@ public class App extends Application {
                 + "	radtime VARCHAR(10),\n"
                 + "	techtime VARCHAR(8),\n"
                 + "	rectime VARCHAR(8),\n"
+                + "	radtime1 FLOAT,\n"
+                + "	techtime1 FLOAT,\n"
+                + "	rectime1 FLOAT,\n"
                 + ");";
         executeSQLStatement(sql);
     }

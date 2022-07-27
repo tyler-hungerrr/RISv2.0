@@ -15,6 +15,7 @@ public class Perfevel {
     
     private int role_id, apptID;
     private String radtime, techtime, rectime;
+    private Double time;
     
     public Perfevel(int role_id,int apptID, String radtime, String techtime, String rectime) {
         this.role_id = role_id;
@@ -26,6 +27,14 @@ public class Perfevel {
     
     public Perfevel(String radtime) {
         this.radtime = radtime;
+    }
+    
+     public Double getTime() {
+        return time;
+    }
+
+    public void SetTime(Double time) {
+        this.time = time;
     }
     
       public String getRadTime() {

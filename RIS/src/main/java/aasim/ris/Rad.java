@@ -634,8 +634,7 @@ public class Rad extends Stage {
                 + ";";
         
         Integer calc = 0;
-        String total = "";
-        String time = "";;
+        String time = "";
         
         try {
 
@@ -677,7 +676,6 @@ public class Rad extends Stage {
                     jcalc = jcalc + calc3;
                 
                 calc = gcalc + hcalc + jcalc;
-                total = String.valueOf(calc);
             }
             
             //
@@ -693,7 +691,7 @@ public class Rad extends Stage {
                 + " WHERE appt_id = '" + apptId + "';";
         
         String sql2 = "UPDATE perfevel "
-                + " SET radtime = '" + total + "', role_id = 5"
+                + " SET radtime1 = '" + calc + "', role_id = 5"
                 + " WHERE appt_jd = '" + apptId + "';";
         try {
             Connection conn = ds.getConnection();

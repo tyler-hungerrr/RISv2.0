@@ -521,8 +521,7 @@ public class Technician extends Stage {
                 + " WHERE appt_jd  = '" + apptId + "'"
                 + ";";
         
-        Integer calc = 0;
-        String total = "";
+        Double calc = 0.0;
         String day = "";
         
         try {
@@ -552,7 +551,7 @@ public class Technician extends Stage {
                 Integer calc3 = Time2_3 - Time1_3;
                 Integer gcalc = 0;
                 Integer hcalc = 0;
-                Integer jcalc = 0;
+                Double jcalc = 0.0;
                 if(!calc1.equals(0)) {
                     gcalc = gcalc + calc1;
                     gcalc = gcalc * 60;
@@ -562,10 +561,9 @@ public class Technician extends Stage {
                 }
                 if(!calc3.equals(0)) 
                     jcalc = jcalc + calc3;
-                    jcalc = jcalc * 60;
+                    jcalc = jcalc / 60;
                 
                 calc = gcalc + hcalc + jcalc;
-                total = String.valueOf(calc);
             }
             
             //
@@ -577,7 +575,7 @@ public class Technician extends Stage {
         }
         
         String sq2 = "UPDATE perfevel"
-                + " SET techtime = '" + total + "', role_id = 4"
+                + " SET techtime1 = '" + calc + "', role_id = 4"
                 + " WHERE appt_jd = '" + apptId + "';";
         
         String sq3 = "UPDATE perfevel"

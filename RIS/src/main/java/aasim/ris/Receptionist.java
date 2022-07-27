@@ -674,8 +674,7 @@ public class Receptionist extends Stage {
                 + " WHERE appt_jd  = '" + appt.getApptID() + "'"
                 + ";";
         
-        Integer calc = 0;
-        String total = "";
+        Double calc = 0.0;
         String day = "";
         
         try {
@@ -705,7 +704,7 @@ public class Receptionist extends Stage {
                 Integer calc3 = Time2_3 - Time1_3;
                 Integer gcalc = 0;
                 Integer hcalc = 0;
-                Integer jcalc = 0;
+                Double jcalc = 0.0;
                 if(!calc1.equals(0)) {
                     gcalc = gcalc + calc1;
                     gcalc = gcalc * 60;
@@ -715,10 +714,9 @@ public class Receptionist extends Stage {
                 }
                 if(!calc3.equals(0)) 
                     jcalc = jcalc + calc3;
-                    jcalc = jcalc * 60;
+                    jcalc = jcalc / 60;
                 
                 calc = gcalc + hcalc + jcalc;
-                total = String.valueOf(calc);
             }
             
             //
@@ -730,7 +728,7 @@ public class Receptionist extends Stage {
         }
         
             String sql3 = "UPDATE perfevel "
-                + " SET rectime = '" + total + "' "
+                + " SET rectime1 = '" + calc + "' "
                 + " WHERE appt_jd = '" + appt.getApptID() + "';";
             App.executeSQLStatement(sql3);
         }
