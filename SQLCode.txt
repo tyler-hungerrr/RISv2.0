@@ -11,7 +11,7 @@ INSERT INTO roles VALUES ('6', 'Biller');
 
 CREATE TABLE appointments (appt_id INT PRIMARY KEY UNIQUE DEFAULT unique_rowid(), patient_id INT NOT NULL, time VARCHAR(25) NOT NULL, statusCode INT NOT NULL,  viewable INT DEFAULT 1,  UNIQUE(patient_id, time)  );
 
-CREATE TABLE perfevel (role_id INT PRIMARY KEY, apptID INT, radtime VARCHAR(10), techtime VARCHAR(8), rectime VARCHAR(8) );
+CREATE TABLE perfevel (appt_jd INT PRIMARY KEY, role_id INT, radtime VARCHAR(10), techtime VARCHAR(8), rectime VARCHAR(8), UNIQUE(appt_jd) );
 
 CREATE TABLE appointmentsOrdersConnector (  apptID INT, orderCodeID INT,  UNIQUE(apptID, orderCodeID)  );
 

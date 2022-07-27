@@ -5,6 +5,7 @@
 package datastorage;
 
 import java.io.InputStream;
+import datastorage.User;
 
 /**
  *

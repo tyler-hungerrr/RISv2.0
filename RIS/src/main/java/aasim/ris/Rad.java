@@ -506,7 +506,7 @@ public class Rad extends Stage {
         s1.setContent(imgContainer);
 
         TextArea reportText = new TextArea();
-        reportText.getText();
+        reportText.setText("Radiology Report: \n" + getRadiologyReport(apptId) + "\n\n");
 
         Button cancel = new Button("Cancel");
         cancel.setId("cancel");
@@ -543,6 +543,32 @@ public class Rad extends Stage {
         VBox container = new VBox(s1, label, reportText, btnContainer);
         y.setCenter(container);
         x.show();
+    }
+    
+    private String getRadiologyReport(String apptID) {
+        String value = "";
+
+        String sql = "SELECT writtenReport "
+                + " FROM report"
+                + " WHERE apptID = '" + apptID + "';";
+        try {
+
+            Connection conn = ds.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            //
+            while (rs.next()) {
+                //What I receieve:  text
+                value = rs.getString("writtenReport");
+            }
+            //
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return value;
     }
 
     private void addReportToDatabase(String report, String apptId) {
@@ -604,12 +630,12 @@ public class Rad extends Stage {
         String sql = "Select radtime"
                 + " FROM perfevel"
                 + " "
-                + " WHERE apptID  = '" + apptId + "'"
+                + " WHERE appt_jd  = '" + apptId + "'"
                 + ";";
         
-        Double calc = 0.0;
+        Integer calc = 0;
         String total = "";
-        String time;
+        String time = "";;
         
         try {
 
@@ -650,8 +676,7 @@ public class Rad extends Stage {
                 if(!calc3.equals(0)) 
                     jcalc = jcalc + calc3;
                 
-                Integer ccalc = gcalc + hcalc + jcalc;
-                calc = Double.valueOf(ccalc);
+                calc = gcalc + hcalc + jcalc;
                 total = String.valueOf(calc);
             }
             
@@ -668,8 +693,8 @@ public class Rad extends Stage {
                 + " WHERE appt_id = '" + apptId + "';";
         
         String sql2 = "UPDATE perfevel "
-                + " SET radtime = '" + total + "'"
-                + " WHERE apptID = '" + apptId + "';";
+                + " SET radtime = '" + total + "', role_id = 5"
+                + " WHERE appt_jd = '" + apptId + "';";
         try {
             Connection conn = ds.getConnection();
             Statement stmt = conn.createStatement();

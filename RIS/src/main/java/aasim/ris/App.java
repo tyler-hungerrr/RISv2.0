@@ -116,15 +116,12 @@ public class App extends Application {
      */
     public static void createPerfevelTable (String fileName) {
         //apptId, patientID, fullname, time, address, insurance, referral, status, order
-        String sql = "CREATE TABLE appointments (\n"
-                + "	role_id INT PRIMARY KEY,\n"
-                + "	apptID INT,\n"
+        String sql = "CREATE TABLE perfevel (\n"
+                + "	apptID INT PRIMARY KEY,\n"
+                + "	role_id INT ,\n"
                 + "	radtime VARCHAR(10),\n"
-                + "	radtime1 VARCHAR(10),\n"
                 + "	techtime VARCHAR(8),\n"
-                + "	techtime1 VARCHAR(8),\n"
                 + "	rectime VARCHAR(8),\n"
-                + "	rectime1 VARCHAR(8),\n"
                 + ");";
         executeSQLStatement(sql);
     }

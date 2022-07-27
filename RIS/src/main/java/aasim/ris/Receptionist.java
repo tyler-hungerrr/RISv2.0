@@ -654,6 +654,7 @@ public class Receptionist extends Stage {
                 + "     (SELECT statusID FROM statusCode WHERE status = '" + status + "') "
                 + " WHERE appt_id = '" + appt.getApptID() + "';";
         App.executeSQLStatement(sql);
+        
 
         if (status.contains("Cancelled")) {
             String sql1 = "INSERT INTO  patientOrders VALUES ('" + appt.getPatientID() + "', (SELECT orderCodeID FROM appointmentsOrdersConnector WHERE apptID = '" + appt.getApptID() + "'), '1');";
@@ -661,18 +662,86 @@ public class Receptionist extends Stage {
         }
         if (status.contains("Technician")) {
             String sql2 = "UPDATE perfevel "
-                + " SET techtime = '" + time + "' "
-                + " WHERE apptID = '" + appt.getApptID() + "';";
-            String sql3 = "UPDATE perfevel "
-                + " SET rectime = '" + time + "' "
-                + " WHERE apptID = '" + appt.getApptID() + "';";
+                + " SET techtime = '" + time + "', role_id = 3"
+                + " WHERE appt_jd = '" + appt.getApptID() + "';";
             App.executeSQLStatement(sql2);
+            
+            String time1 = String.valueOf(time);
+        
+        String sql9 = "Select rectime"
+                + " FROM perfevel"
+                + " "
+                + " WHERE appt_jd  = '" + appt.getApptID() + "'"
+                + ";";
+        
+        Integer calc = 0;
+        String total = "";
+        String day = "";
+        
+        try {
+
+            Connection conn = ds.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql9);
+            //
+            
+
+            while (rs.next()) {
+                day = rs.getString("rectime");
+                String time1_1 = day.substring(0, 1);
+                String time1_2 = day.substring(3, 4);
+                String time1_3 = day.substring(6, 7);
+                String time2_1 = time1.substring(0, 1);
+                String time2_2 = time1.substring(3, 4);
+                String time2_3 = time1.substring(6, 7);
+                Integer Time1_1 = Integer.valueOf(time1_1);
+                Integer Time1_2 = Integer.valueOf(time1_2);
+                Integer Time1_3 = Integer.valueOf(time1_3);
+                Integer Time2_1 = Integer.valueOf(time2_1);
+                Integer Time2_2 = Integer.valueOf(time2_2);
+                Integer Time2_3 = Integer.valueOf(time2_3);
+                Integer calc1 = Time2_1 - Time1_1;
+                Integer calc2 = Time2_2 - Time1_2;
+                Integer calc3 = Time2_3 - Time1_3;
+                Integer gcalc = 0;
+                Integer hcalc = 0;
+                Integer jcalc = 0;
+                if(!calc1.equals(0)) {
+                    gcalc = gcalc + calc1;
+                    gcalc = gcalc * 60;
+                }
+                if(!calc2.equals(0)) {
+                    hcalc = hcalc + calc2;
+                }
+                if(!calc3.equals(0)) 
+                    jcalc = jcalc + calc3;
+                    jcalc = jcalc * 60;
+                
+                calc = gcalc + hcalc + jcalc;
+                total = String.valueOf(calc);
+            }
+            
+            //
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        
+            String sql3 = "UPDATE perfevel "
+                + " SET rectime = '" + total + "' "
+                + " WHERE appt_jd = '" + appt.getApptID() + "';";
             App.executeSQLStatement(sql3);
         }
         if (status.contains("Checked")) {
+            String sql5 = "INSERT INTO perfevel(appt_jd, role_id)"
+                    + " VALUES ('" + appt.getApptID() + "',2)"
+                    + ";\n";
+            App.executeSQLStatement(sql5);
             String sql4 = "UPDATE perfevel "
                 + " SET rectime = '" + time + "' "
-                + " WHERE apptID = '" + appt.getApptID() + "';";
+                + " WHERE appt_jd = '" + appt.getApptID() + "';";
             App.executeSQLStatement(sql4);
         }
     }
@@ -834,11 +903,7 @@ public class Receptionist extends Stage {
             String sql = "INSERT INTO appointments(patient_id, time, statusCode)"
                     + " VALUES ('" + patientID + "', '" + time + "', '1');\n";
             App.executeSQLStatement(sql);
-            String sql3 = "INSERT INTO perfevel(apptID)"
-                    + " SELECT appt_id FROM appointments"
-                    + " WHERE patient_id = '" + patientID + "' AND time = '" + time + "'"
-                    + ";\n";
-            App.executeSQLStatement(sql3);
+           
             for (String x : orders) {
                 String sql1 = "INSERT INTO appointmentsOrdersConnector(apptID, orderCodeID)"
                         + " VALUES ("
@@ -849,7 +914,7 @@ public class Receptionist extends Stage {
                 App.executeSQLStatement(sql1);
                 String sql2 = "DELETE FROM patientOrders WHERE patientID = '" + patientID + "' AND orderCodeID = (SELECT orderID FROM orderCodes WHERE orders = '" + x + "')";
                 App.executeSQLStatement(sql2);
-            }
+            } 
             this.close();
         }
 

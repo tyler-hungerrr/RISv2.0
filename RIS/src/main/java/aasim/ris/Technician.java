@@ -513,13 +513,76 @@ public class Technician extends Stage {
                 + " SET statusCode = 4"
                 + " WHERE appt_id = '" + apptId + "';";
         
+        String time1 = String.valueOf(time);
+        
+        String sql9 = "Select techtime"
+                + " FROM perfevel"
+                + " "
+                + " WHERE appt_jd  = '" + apptId + "'"
+                + ";";
+        
+        Integer calc = 0;
+        String total = "";
+        String day = "";
+        
+        try {
+
+            Connection conn = ds.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql9);
+            //
+            
+
+            while (rs.next()) {
+                day = rs.getString("techtime");
+                String time1_1 = day.substring(0, 1);
+                String time1_2 = day.substring(3, 4);
+                String time1_3 = day.substring(6, 7);
+                String time2_1 = time1.substring(0, 1);
+                String time2_2 = time1.substring(3, 4);
+                String time2_3 = time1.substring(6, 7);
+                Integer Time1_1 = Integer.valueOf(time1_1);
+                Integer Time1_2 = Integer.valueOf(time1_2);
+                Integer Time1_3 = Integer.valueOf(time1_3);
+                Integer Time2_1 = Integer.valueOf(time2_1);
+                Integer Time2_2 = Integer.valueOf(time2_2);
+                Integer Time2_3 = Integer.valueOf(time2_3);
+                Integer calc1 = Time2_1 - Time1_1;
+                Integer calc2 = Time2_2 - Time1_2;
+                Integer calc3 = Time2_3 - Time1_3;
+                Integer gcalc = 0;
+                Integer hcalc = 0;
+                Integer jcalc = 0;
+                if(!calc1.equals(0)) {
+                    gcalc = gcalc + calc1;
+                    gcalc = gcalc * 60;
+                }
+                if(!calc2.equals(0)) {
+                    hcalc = hcalc + calc2;
+                }
+                if(!calc3.equals(0)) 
+                    jcalc = jcalc + calc3;
+                    jcalc = jcalc * 60;
+                
+                calc = gcalc + hcalc + jcalc;
+                total = String.valueOf(calc);
+            }
+            
+            //
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        
         String sq2 = "UPDATE perfevel"
-                + " SET techtime = '" + time + "'"
-                + " WHERE apptID = '" + apptId + "';";
+                + " SET techtime = '" + total + "', role_id = 4"
+                + " WHERE appt_jd = '" + apptId + "';";
         
         String sq3 = "UPDATE perfevel"
                 + " SET radtime = '" + date + "'"
-                + " WHERE apptID = '" + apptId + "';";
+                + " WHERE appt_jd = '" + apptId + "';";
         try {
 
             Connection conn = ds.getConnection();
