@@ -117,7 +117,7 @@ public class App extends Application {
     public static void createPerfevelTable (String fileName) {
         //apptId, patientID, fullname, time, address, insurance, referral, status, order
         String sql = "CREATE TABLE perfevel (\n"
-                + "	apptID INT PRIMARY KEY,\n"
+                + "	appt_jd INT PRIMARY KEY,\n"
                 + "	role_id INT ,\n"
                 + "	radtime VARCHAR(10),\n"
                 + "	techtime VARCHAR(8),\n"
