@@ -53,6 +53,8 @@ public class Administrator extends Stage {
     Label modalities = new Label("Modalities");
     Label patientAlerts = new Label("Patient Alerts");
     Label radPerformanceReports = new Label("Rad Performance Reports");
+    Label techPerformanceReports = new Label("Tech Performance Reports");
+    Label recPerformanceReports = new Label("Rec Performance Reports");
     Button logOut = new Button("Log Out");
     //End Navbar
 
@@ -64,6 +66,8 @@ public class Administrator extends Stage {
     VBox modalitiesContainer = new VBox();
     VBox patientAlertsContainer = new VBox();
     VBox radPerformanceReportsContainer = new VBox();
+    VBox techPerformanceReportsContainer = new VBox();
+    VBox recPerformanceReportsContainer = new VBox();
     //
     //Scene
     BorderPane main = new BorderPane();
@@ -94,7 +98,7 @@ public class Administrator extends Stage {
         pfp.setFitHeight(38);
         username.setId("navbar");
         username.setOnMouseClicked(eh -> userInfo());
-        HBox navButtons = new HBox(users, patients, appointments, modalities, patientAlerts, radPerformanceReports);
+        HBox navButtons = new HBox(users, patients, appointments, modalities, patientAlerts, radPerformanceReports, techPerformanceReports, recPerformanceReports);
         navButtons.setAlignment(Pos.TOP_LEFT);
 //        navButtons.setSpacing(10);
         HBox.setHgrow(navButtons, Priority.ALWAYS);
@@ -108,6 +112,8 @@ public class Administrator extends Stage {
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
         radPerformanceReports.setId("navbar");
+        techPerformanceReports.setId("navbar");
+        recPerformanceReports.setId("navbar");
         //End navbar
 
         //Center
@@ -119,6 +125,8 @@ public class Administrator extends Stage {
         modalities.setOnMouseClicked(eh -> modalitiesPageView());
         patientAlerts.setOnMouseClicked(eh -> patientAlertsPageView());
         radPerformanceReports.setOnMouseClicked(eh -> radPerformancePageView());
+        techPerformanceReports.setOnMouseClicked(eh -> techPerformancePageView());
+        recPerformanceReports.setOnMouseClicked(eh -> recPerformancePageView());
 
         //End Center
         //Set Scene and Structure
@@ -245,6 +253,8 @@ public class Administrator extends Stage {
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
         radPerformanceReports.setId("navbar");
+        techPerformanceReports.setId("navbar");
+        recPerformanceReports.setId("navbar");
 
         //
         //Searchbar Structure
@@ -470,6 +480,8 @@ public class Administrator extends Stage {
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
         radPerformanceReports.setId("navbar");
+        techPerformanceReports.setId("navbar");
+        recPerformanceReports.setId("navbar");
 
         //Searchbar Structure
         ChoiceBox<String> choiceBox = new ChoiceBox();
@@ -591,6 +603,8 @@ public class Administrator extends Stage {
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
         radPerformanceReports.setId("navbar");
+        techPerformanceReports.setId("navbar");
+        recPerformanceReports.setId("navbar");
 
         //Searchbar Structure
         ChoiceBox<String> choiceBox = new ChoiceBox();
@@ -739,6 +753,8 @@ public class Administrator extends Stage {
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
         radPerformanceReports.setId("navbar");
+        techPerformanceReports.setId("navbar");
+        recPerformanceReports.setId("navbar");
 
         addModality.setOnAction(eh -> addModality());
     }
@@ -871,6 +887,8 @@ public class Administrator extends Stage {
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
         radPerformanceReports.setId("navbar");
+        techPerformanceReports.setId("navbar");
+        recPerformanceReports.setId("navbar");
         addPatientAlert.setOnAction(eh -> addPatientAlert());
     }
 
@@ -1145,6 +1163,8 @@ public class Administrator extends Stage {
         modalities.setId("navbar");
         patientAlerts.setId("navbar");
         radPerformanceReports.setId("navbar");
+        techPerformanceReports.setId("navbar");
+        recPerformanceReports.setId("navbar");
 
         //Searchbar Structure
         ChoiceBox<String> choiceBox = new ChoiceBox();
@@ -1250,4 +1270,301 @@ public class Administrator extends Stage {
 
     //</editor-fold>
 //
+//<editor-fold defaultstate="collapsed" desc=" Tech Performance Reports Section">
+     private void createTableTechPerformance() {
+        table.getColumns().clear();
+        //All of the Columns
+        TableColumn userIDCol = new TableColumn("User ID");
+        TableColumn fullNameCol = new TableColumn("Full Name");
+        TableColumn usernameCol = new TableColumn("Username");
+        TableColumn roleCol = new TableColumn("Role");
+        TableColumn reportsCol = new TableColumn("Performance Report");
+
+        //And all of the Value setting
+        userIDCol.setCellValueFactory(new PropertyValueFactory<>("userID"));
+        fullNameCol.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
+        roleCol.setCellValueFactory(new PropertyValueFactory<>("roleVal"));
+        reportsCol.setCellValueFactory(new PropertyValueFactory<>("techtime"));
+
+        //Couldn't put all the styling
+        userIDCol.prefWidthProperty().bind(table.widthProperty().multiply(0.09));
+        fullNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.2));
+        usernameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.2));
+        roleCol.prefWidthProperty().bind(table.widthProperty().multiply(0.1));
+        reportsCol.prefWidthProperty().bind(table.widthProperty().multiply(0.1));
+        table.setStyle("-fx-background-color: #25A18E; -fx-text-fill: WHITE; ");
+        //Together again
+        table.getColumns().addAll(userIDCol, fullNameCol, usernameCol, roleCol, reportsCol);
+        //Add Status Update Column:
+    }
+    private void techPerformancePageView() {
+        techPerformanceReportsContainer.getChildren().clear();
+        main.setCenter(techPerformanceReportsContainer);
+        createTableTechPerformance();
+        populateTableTechPerformance();
+
+        techPerformanceReportsContainer.getChildren().addAll(table);
+        techPerformanceReportsContainer.setSpacing(10);
+        users.setId("navbar");
+        patients.setId("navbar");
+        appointments.setId("navbar");
+        modalities.setId("navbar");
+        patientAlerts.setId("navbar");
+        radPerformanceReports.setId("navbar");
+        techPerformanceReports.setId("navbar");
+        recPerformanceReports.setId("navbar");
+
+        //Searchbar Structure
+        ChoiceBox<String> choiceBox = new ChoiceBox();
+        TextField search = new TextField("Search Users");
+        HBox searchContainer = new HBox(choiceBox, search);
+        searchContainer.setAlignment(Pos.TOP_RIGHT);
+        HBox.setHgrow(searchContainer, Priority.ALWAYS);
+        choiceBox.setPrefHeight(40);
+        search.setPrefHeight(40);
+        choiceBox.getItems().addAll("User ID", "Full Name", "Email", "Role");
+        choiceBox.setValue("User ID");
+        search.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (choiceBox.getValue().equals("User ID")) {
+                flUsers.setPredicate(p -> new String(p.getUserID() + "").contains(newValue));//filter table by Appt ID
+            }
+            if (choiceBox.getValue().equals("Full Name")) {
+                flUsers.setPredicate(p -> p.getFullName().toLowerCase().contains(newValue.toLowerCase()));//filter table by Patient Id
+            }
+            if (choiceBox.getValue().equals("Email")) {
+                flUsers.setPredicate(p -> p.getEmail().toLowerCase().contains(newValue.toLowerCase()));//filter table by Full name
+            }
+            if (choiceBox.getValue().equals("Role")) {
+                flUsers.setPredicate(p -> p.getRoleVal().toLowerCase().contains(newValue.toLowerCase()));//filter table by Date/Time
+            }
+            table.getItems().clear();
+            table.getItems().addAll(flUsers);
+        });
+        techPerformanceReportsContainer.getChildren().add(searchContainer);
+    }
+        
+        private void populateTableTechPerformance(){
+        table.getItems().clear();
+        //Connect to database
+        String sql = "Select users.user_id, users.full_name, users.username, roles.role AS role"
+                + " FROM users "
+                + " INNER JOIN roles ON users.role = roles.roleID "
+                + " WHERE roles.roleID = 3"
+                + ";";
+
+        try {
+            Connection conn = ds.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            //ResultSet rs1 = stmt.executeQuery(sql1);
+            //
+            List<User> list = new ArrayList<User>();
+            //List<Perfevel> list1 = new ArrayList<Perfevel>();
+
+            while (rs.next()) {
+                
+                //What I receieve:  int userID, String email, String fullName, String username, int role
+                User user = new User(rs.getString("user_id"), rs.getString("full_name"), rs.getString("username"), rs.getString("role"));
+                //Perfevel perfevel = new Perfevel(getTechReport());
+                
+                list.add(user);
+                //list1.add(perfevel);
+            }
+
+            flUsers = new FilteredList(FXCollections.observableList(list), p -> true);
+            table.getItems().addAll(flUsers);
+            //flPerfevel = new FilteredList(FXCollections.observableList(list1), p -> true);
+            //table.getItems().addAll(flPerfevel);
+            //
+            rs.close();
+            //rs1.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+        private String getTechReport() {
+            String sql = "SELECT AVG (techtime1) AS days"
+                     + " FROM perfevel"
+                     + " "
+                     + ";";
+            
+            String total = "";
+        try {
+
+            Connection conn = ds.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            //
+            
+
+            while (rs.next()) {
+                total = rs.getDouble("days") + " minutes";
+            }
+            
+            //
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return total;
+        }
+
+    
+
+    //</editor-fold>
+//
+//<editor-fold defaultstate="collapsed" desc=" Rec Performance Reports Section">
+     private void createTableRecPerformance() {
+        table.getColumns().clear();
+        //All of the Columns
+        TableColumn userIDCol = new TableColumn("User ID");
+        TableColumn fullNameCol = new TableColumn("Full Name");
+        TableColumn usernameCol = new TableColumn("Username");
+        TableColumn roleCol = new TableColumn("Role");
+        TableColumn reportsCol = new TableColumn("Performance Report");
+
+        //And all of the Value setting
+        userIDCol.setCellValueFactory(new PropertyValueFactory<>("userID"));
+        fullNameCol.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
+        roleCol.setCellValueFactory(new PropertyValueFactory<>("roleVal"));
+        reportsCol.setCellValueFactory(new PropertyValueFactory<>("rectime"));
+
+        //Couldn't put all the styling
+        userIDCol.prefWidthProperty().bind(table.widthProperty().multiply(0.09));
+        fullNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.2));
+        usernameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.2));
+        roleCol.prefWidthProperty().bind(table.widthProperty().multiply(0.1));
+        reportsCol.prefWidthProperty().bind(table.widthProperty().multiply(0.1));
+        table.setStyle("-fx-background-color: #25A18E; -fx-text-fill: WHITE; ");
+        //Together again
+        table.getColumns().addAll(userIDCol, fullNameCol, usernameCol, roleCol, reportsCol);
+        //Add Status Update Column:
+    }
+    private void recPerformancePageView() {
+        recPerformanceReportsContainer.getChildren().clear();
+        main.setCenter(recPerformanceReportsContainer);
+        createTableRecPerformance();
+        populateTableRecPerformance();
+
+        recPerformanceReportsContainer.getChildren().addAll(table);
+        recPerformanceReportsContainer.setSpacing(10);
+        users.setId("navbar");
+        patients.setId("navbar");
+        appointments.setId("navbar");
+        modalities.setId("navbar");
+        patientAlerts.setId("navbar");
+        radPerformanceReports.setId("navbar");
+        techPerformanceReports.setId("navbar");
+        recPerformanceReports.setId("navbar");
+
+        //Searchbar Structure
+        ChoiceBox<String> choiceBox = new ChoiceBox();
+        TextField search = new TextField("Search Users");
+        HBox searchContainer = new HBox(choiceBox, search);
+        searchContainer.setAlignment(Pos.TOP_RIGHT);
+        HBox.setHgrow(searchContainer, Priority.ALWAYS);
+        choiceBox.setPrefHeight(40);
+        search.setPrefHeight(40);
+        choiceBox.getItems().addAll("User ID", "Full Name", "Email", "Role");
+        choiceBox.setValue("User ID");
+        search.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (choiceBox.getValue().equals("User ID")) {
+                flUsers.setPredicate(p -> new String(p.getUserID() + "").contains(newValue));//filter table by Appt ID
+            }
+            if (choiceBox.getValue().equals("Full Name")) {
+                flUsers.setPredicate(p -> p.getFullName().toLowerCase().contains(newValue.toLowerCase()));//filter table by Patient Id
+            }
+            if (choiceBox.getValue().equals("Email")) {
+                flUsers.setPredicate(p -> p.getEmail().toLowerCase().contains(newValue.toLowerCase()));//filter table by Full name
+            }
+            if (choiceBox.getValue().equals("Role")) {
+                flUsers.setPredicate(p -> p.getRoleVal().toLowerCase().contains(newValue.toLowerCase()));//filter table by Date/Time
+            }
+            table.getItems().clear();
+            table.getItems().addAll(flUsers);
+        });
+        recPerformanceReportsContainer.getChildren().add(searchContainer);
+    }
+        
+        private void populateTableRecPerformance(){
+        table.getItems().clear();
+        //Connect to database
+        String sql = "Select users.user_id, users.full_name, users.username, roles.role AS role"
+                + " FROM users "
+                + " INNER JOIN roles ON users.role = roles.roleID "
+                + " WHERE roles.roleID = 2"
+                + ";";
+
+        try {
+            Connection conn = ds.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            //ResultSet rs1 = stmt.executeQuery(sql1);
+            //
+            List<User> list = new ArrayList<User>();
+            //List<Perfevel> list1 = new ArrayList<Perfevel>();
+
+            while (rs.next()) {
+                
+                //What I receieve:  int userID, String email, String fullName, String username, int role
+                User user = new User(rs.getString("user_id"), rs.getString("full_name"), rs.getString("username"), rs.getString("role"));
+                //Perfevel perfevel = new Perfevel(getRecReport());
+                
+                list.add(user);
+                //list1.add(perfevel);
+            }
+
+            flUsers = new FilteredList(FXCollections.observableList(list), p -> true);
+            table.getItems().addAll(flUsers);
+            //flPerfevel = new FilteredList(FXCollections.observableList(list1), p -> true);
+            //table.getItems().addAll(flPerfevel);
+            //
+            rs.close();
+            //rs1.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+        private String getRecReport() {
+            String sql = "SELECT AVG (rectime1) AS days"
+                     + " FROM perfevel"
+                     + " "
+                     + ";";
+            
+            String total = "";
+        try {
+
+            Connection conn = ds.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            //
+            
+
+            while (rs.next()) {
+                total = rs.getDouble("days") + " minutes";
+            }
+            
+            //
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return total;
+        }
+
+    
+
+    //</editor-fold>
 }
