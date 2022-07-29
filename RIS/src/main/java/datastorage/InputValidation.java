@@ -173,7 +173,7 @@ public class InputValidation {
     }
 
 
-    public static boolean validateNegPayment(int payAMT, int billAMT){
+    public static boolean validateNegPayment(Double payAMT, Double billAMT){
         
         if (payAMT > billAMT){
             Alert A = new Alert(Alert.AlertType.INFORMATION);
