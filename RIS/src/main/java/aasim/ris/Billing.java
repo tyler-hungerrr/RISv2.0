@@ -692,34 +692,17 @@ public class Billing extends Stage {
                 }
 
                 int paymentAMT = Integer.parseInt(ep.getText());
-                double payAMT = paymentAMT;
+                //double payAMT = paymentAMT;
                 //int BillAMT = Integer;
-            String sql6 = "SELECT  patientPayment"
+                String sql6 = "SELECT  patientPayment"
                      + " FROM patientPayments"
                      +  " WHERE apptid = '" + appt.getApptID()+ "'"
                      + ";";
 
             
-            Double BillAMT = 0.0;
-        try {
-
-            Connection conn = ds.getConnection();
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql6);
-            //
-            
-
-            while (rs.next()) {
-                BillAMT = rs.getDouble("patientPayment") ;
-            }
-            
-            //
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+                int BillAMT = 0;
+                BillAMT = (int) calculateTotalCost(appt);
+        
 
 
                 if (!InputValidation.validateNegPayment(paymentAMT, BillAMT)){
