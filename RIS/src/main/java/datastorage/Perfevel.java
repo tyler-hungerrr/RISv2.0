@@ -17,7 +17,11 @@ public class Perfevel {
     private String radtime;
     private String techtime;
     private String rectime;
-    private Double time;
+    public Double time;
+    public String userID;
+    public String fullName;
+    public String username;
+    public String roleVal;
     
     public Perfevel(int role_id,int apptID, String radtime, String techtime, String rectime) {
         this.role_id = role_id;
@@ -29,6 +33,34 @@ public class Perfevel {
     
     public Perfevel(String radtime) {
         this.radtime = radtime;
+    }
+    
+    public String getRoleVal() {
+        return roleVal;
+    }
+    
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+    
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+    
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
     
      public Double getTime() {

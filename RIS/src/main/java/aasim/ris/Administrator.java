@@ -1136,7 +1136,7 @@ public class Administrator extends Stage {
         fullNameCol.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         roleCol.setCellValueFactory(new PropertyValueFactory<>("roleVal"));
-        reportsCol.setCellValueFactory(new PropertyValueFactory<>("radtime"));
+        reportsCol.setCellValueFactory(new PropertyValueFactory<>("time"));
 
         //Couldn't put all the styling
         userIDCol.prefWidthProperty().bind(table.widthProperty().multiply(0.09));
@@ -1263,6 +1263,7 @@ public class Administrator extends Stage {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        System.out.println(total);
         return total;
         }
 
@@ -1285,7 +1286,7 @@ public class Administrator extends Stage {
         fullNameCol.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         roleCol.setCellValueFactory(new PropertyValueFactory<>("roleVal"));
-        reportsCol.setCellValueFactory(new PropertyValueFactory<>("techtime"));
+        reportsCol.setCellValueFactory(new PropertyValueFactory<>("time"));
 
         //Couldn't put all the styling
         userIDCol.prefWidthProperty().bind(table.widthProperty().multiply(0.09));
@@ -1412,6 +1413,7 @@ public class Administrator extends Stage {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        System.out.println(total);
         return total;
         }
 
@@ -1434,7 +1436,7 @@ public class Administrator extends Stage {
         fullNameCol.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         roleCol.setCellValueFactory(new PropertyValueFactory<>("roleVal"));
-        reportsCol.setCellValueFactory(new PropertyValueFactory<>("rectime"));
+        reportsCol.setCellValueFactory(new PropertyValueFactory<>("time"));
 
         //Couldn't put all the styling
         userIDCol.prefWidthProperty().bind(table.widthProperty().multiply(0.09));
@@ -1506,28 +1508,26 @@ public class Administrator extends Stage {
             Connection conn = ds.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            //ResultSet rs1 = stmt.executeQuery(sql1);
             //
             List<User> list = new ArrayList<User>();
-            //List<Perfevel> list1 = new ArrayList<Perfevel>();
+            List<Perfevel> list1 = new ArrayList<Perfevel>();
 
             while (rs.next()) {
                 
                 //What I receieve:  int userID, String email, String fullName, String username, int role
                 User user = new User(rs.getString("user_id"), rs.getString("full_name"), rs.getString("username"), rs.getString("role"));
-                //Perfevel perfevel = new Perfevel(getRecReport());
+                Perfevel perfevel = new Perfevel(getRecReport());
                 
                 list.add(user);
-                //list1.add(perfevel);
+                list1.add(perfevel);
             }
 
             flUsers = new FilteredList(FXCollections.observableList(list), p -> true);
             table.getItems().addAll(flUsers);
-            //flPerfevel = new FilteredList(FXCollections.observableList(list1), p -> true);
-            //table.getItems().addAll(flPerfevel);
+            flPerfevel = new FilteredList(FXCollections.observableList(list1), p -> true);
+            table.getItems().addAll(flPerfevel);
             //
             rs.close();
-            //rs1.close();
             stmt.close();
             conn.close();
         } catch (SQLException e) {
@@ -1560,6 +1560,7 @@ public class Administrator extends Stage {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        System.out.println(total);
         return total;
         }
 

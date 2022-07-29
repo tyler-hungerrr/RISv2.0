@@ -16,13 +16,16 @@ import datastorage.Perfevel;
  */
 public class User {
 
-    private String userID;
-    private String fullName, email, username;
+    public String userID;
+    public String fullName;
+    private String email;
+    public String username;
     private int role;
     private boolean enabled;
     public Button placeholder = new Button("placeholder");
-    private String roleVal;
+    public String roleVal;
     private Image pfp;
+    public Double time;
 
     public Image getPfp() {
         return pfp;
@@ -94,6 +97,14 @@ public class User {
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+    
+    public Double getTime() {
+        return time;
+    }
+
+    public void SetTime(Double time) {
+        this.time = time;
     }
 
     public String getFullName() {

@@ -534,12 +534,12 @@ public class Technician extends Stage {
 
             while (rs.next()) {
                 day = rs.getString("techtime");
-                String time1_1 = day.substring(0, 1);
-                String time1_2 = day.substring(3, 4);
-                String time1_3 = day.substring(6, 7);
-                String time2_1 = time1.substring(0, 1);
-                String time2_2 = time1.substring(3, 4);
-                String time2_3 = time1.substring(6, 7);
+                String time1_1 = day.substring(0, 2);
+                String time1_2 = day.substring(3, 5);
+                String time1_3 = day.substring(6, 8);
+                String time2_1 = time1.substring(0, 2);
+                String time2_2 = time1.substring(3, 5);
+                String time2_3 = time1.substring(6, 8);
                 Integer Time1_1 = Integer.valueOf(time1_1);
                 Integer Time1_2 = Integer.valueOf(time1_2);
                 Integer Time1_3 = Integer.valueOf(time1_3);
@@ -552,14 +552,14 @@ public class Technician extends Stage {
                 Integer gcalc = 0;
                 Integer hcalc = 0;
                 Double jcalc = 0.0;
-                if(!calc1.equals(0)) {
+                if(!Time2_1.equals(Time1_1)) {
                     gcalc = gcalc + calc1;
                     gcalc = gcalc * 60;
                 }
-                if(!calc2.equals(0)) {
+                if(!Time2_2.equals(Time1_2)) {
                     hcalc = hcalc + calc2;
                 }
-                if(!calc3.equals(0)) 
+                if(!Time2_3.equals(Time1_3)) 
                     jcalc = jcalc + calc3;
                     jcalc = jcalc / 60;
                 

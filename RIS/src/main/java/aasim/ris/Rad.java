@@ -646,9 +646,9 @@ public class Rad extends Stage {
 
             while (rs.next()) {
                 time = rs.getString("radtime");
-                String time1_1 = time.substring(0, 3);
-                String time1_2 = time.substring(5, 6);
-                String time1_3 = time.substring(8, 9);
+                String time1_1 = time.substring(0, 4);
+                String time1_2 = time.substring(5, 7);
+                String time1_3 = time.substring(8, 10);
                 String time2_1 = time1.substring(0, 3);
                 String time2_2 = time1.substring(5, 6);
                 String time2_3 = time1.substring(8, 9);
@@ -664,15 +664,15 @@ public class Rad extends Stage {
                 Integer gcalc = 0;
                 Integer hcalc = 0;
                 Integer jcalc = 0;
-                if(!calc1.equals(0)) {
+                if(!Time2_1.equals(Time1_1)) {
                     gcalc = gcalc + calc1;
                     gcalc = gcalc * 365;
                 }
-                if(!calc2.equals(0)) {
+                if(!Time2_2.equals(Time2_2)) {
                     hcalc = hcalc + calc2;
                     hcalc = hcalc * 31;
                 }
-                if(!calc3.equals(0)) 
+                if(!Time2_3.equals(Time1_3)) 
                     jcalc = jcalc + calc3;
                 
                 calc = gcalc + hcalc + jcalc;
