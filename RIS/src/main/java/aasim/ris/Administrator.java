@@ -1538,7 +1538,6 @@ public class Administrator extends Stage {
         private String getRecReport() {
             String sql = "SELECT AVG (rectime1) AS days"
                      + " FROM perfevel"
-                     + " "
                      + ";";
             
             String total = "";

@@ -14,7 +14,9 @@ import datastorage.User;
 public class Perfevel {
     
     private int role_id, apptID;
-    private String radtime, techtime, rectime;
+    private String radtime;
+    private String techtime;
+    private String rectime;
     private Double time;
     
     public Perfevel(int role_id,int apptID, String radtime, String techtime, String rectime) {
