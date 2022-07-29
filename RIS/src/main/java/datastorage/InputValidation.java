@@ -161,18 +161,6 @@ public class InputValidation {
         try {
             Float.parseFloat(payment);
 
-            int paymentAMT = Integer.parseInt(payment);
-            System.out.println(paymentAMT);
-
-            if (paymentAMT < 0){
-                Alert A = new Alert(Alert.AlertType.INFORMATION);
-                A.setTitle("Error");
-                A.setHeaderText("Please Try Again");
-                A.setContentText("Bill can not go below $0.00.");
-                A.show();
-                return false;
-            }
-
         } catch (Exception b) {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setTitle("Error");
