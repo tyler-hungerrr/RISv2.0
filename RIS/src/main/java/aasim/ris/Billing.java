@@ -693,6 +693,32 @@ public class Billing extends Stage {
 
                 int paymentAMT = Integer.parseInt(ep.getText());
                 //int BillAMT = Integer;
+            String sql6 = "SELECT  patientPayment"
+                     + " FROM patientPayments"
+                     +  " WHERE apptid = '" + appt.getApptID()+ "'"
+                     + ";";
+
+            
+            Double BillAMT = 0.0;
+        try {
+
+            Connection conn = ds.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql6);
+            //
+            
+
+            while (rs.next()) {
+                BillAMT = rs.getDouble("patientPayment") ;
+            }
+            
+            //
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
 
 
                 if (!InputValidation.validateNegPayment(paymentAMT, BillAMT)){
