@@ -266,7 +266,7 @@ public class Rad extends Stage {
         populateTable();
         main.setCenter(tableContainer);
     }
-
+    //creates a new report
     private void radPageTwo(String patID, String apptId, String fullname, String order) {
         VBox container = new VBox();
         container.setSpacing(10);
@@ -308,7 +308,7 @@ public class Rad extends Stage {
         });
 
     }
-    
+    //updates an existing report
     private void radPageThree(String patID, String apptId, String fullname, String order) {
         VBox container = new VBox();
         container.setSpacing(10);
@@ -348,7 +348,7 @@ public class Rad extends Stage {
         });
         
     }
-
+    //creates a new report
     private void openFile(String patID, String apptId) {
 
         Stage x = new Stage();
@@ -447,7 +447,7 @@ public class Rad extends Stage {
         y.setCenter(container);
         x.show();
     }
-    
+    //updates an existing report
     private void editFile(String patID, String apptId) {
 
         Stage x = new Stage();
@@ -544,7 +544,7 @@ public class Rad extends Stage {
         y.setCenter(container);
         x.show();
     }
-    
+    //gets the written report from database
     private String getRadiologyReport(String apptID) {
         String value = "";
 
@@ -570,7 +570,7 @@ public class Rad extends Stage {
         }
         return value;
     }
-
+    //adds the written report to the database
     private void addReportToDatabase(String report, String apptId) {
         String sql = "INSERT INTO report (apptID, writtenreport) VALUES ('" + apptId + "', ?);";
         try {
@@ -584,7 +584,7 @@ public class Rad extends Stage {
             System.out.println(e.getMessage());
         }
     }
-    
+    //overrides the existing report on the database
     private void editReportOnDatabase(String report, String apptId) {
         String sql = "UPDATE report "
                 + " SET writtenReport  = '" + report + "' "

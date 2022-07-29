@@ -1136,7 +1136,7 @@ public class Administrator extends Stage {
         fullNameCol.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         roleCol.setCellValueFactory(new PropertyValueFactory<>("roleVal"));
-        reportsCol.setCellValueFactory(new PropertyValueFactory<>("time"));
+        reportsCol.setCellValueFactory(new PropertyValueFactory<>("placeholder"));
 
         //Couldn't put all the styling
         userIDCol.prefWidthProperty().bind(table.widthProperty().multiply(0.09));
@@ -1208,34 +1208,50 @@ public class Administrator extends Stage {
             Connection conn = ds.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            //ResultSet rs1 = stmt.executeQuery(sql1);
             //
             List<User> list = new ArrayList<User>();
-            //List<Perfevel> list1 = new ArrayList<Perfevel>();
 
             while (rs.next()) {
                 
-                //What I receieve:  int userID, String email, String fullName, String username, int role
+                //What I receieve:  int userID, String fullName, String username, roleval
                 User user = new User(rs.getString("user_id"), rs.getString("full_name"), rs.getString("username"), rs.getString("role"));
-                //Perfevel perfevel = new Perfevel(getRadReport());
+                user.placeholder.setText("View Report");
+                user.placeholder.setOnAction(eh -> displayReportRad());
                 
                 list.add(user);
-                //list1.add(perfevel);
             }
 
             flUsers = new FilteredList(FXCollections.observableList(list), p -> true);
             table.getItems().addAll(flUsers);
-            //flPerfevel = new FilteredList(FXCollections.observableList(list1), p -> true);
-            //table.getItems().addAll(flPerfevel);
             //
             rs.close();
-            //rs1.close();
             stmt.close();
             conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
+        private void displayReportRad() {
+        Stage x = new Stage();
+        VBox container = new VBox();
+        Scene scene = new Scene(container);
+        scene.getStylesheets().add("file:stylesheet.css");
+        x.setScene(scene);
+
+        HBox hello = new HBox();
+        Label showreport = new Label(getRadReport());
+        Button b = new Button("Back");
+        hello.getChildren().addAll(showreport, b);
+        container.getChildren().addAll(hello);
+        b.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            
+            public void handle(ActionEvent eh) {
+                x.close();
+            }
+        });
+        x.showAndWait();
+        }
     
         private String getRadReport() {
             String sql = "SELECT AVG (radtime1) AS days"
@@ -1253,7 +1269,7 @@ public class Administrator extends Stage {
             
 
             while (rs.next()) {
-                total = rs.getDouble("days") + " days";
+                total = rs.getDouble("days") + " days on average";
             }
             
             //
@@ -1286,7 +1302,7 @@ public class Administrator extends Stage {
         fullNameCol.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         roleCol.setCellValueFactory(new PropertyValueFactory<>("roleVal"));
-        reportsCol.setCellValueFactory(new PropertyValueFactory<>("time"));
+        reportsCol.setCellValueFactory(new PropertyValueFactory<>("placeholder"));
 
         //Couldn't put all the styling
         userIDCol.prefWidthProperty().bind(table.widthProperty().multiply(0.09));
@@ -1358,34 +1374,50 @@ public class Administrator extends Stage {
             Connection conn = ds.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            //ResultSet rs1 = stmt.executeQuery(sql1);
             //
             List<User> list = new ArrayList<User>();
-            //List<Perfevel> list1 = new ArrayList<Perfevel>();
 
             while (rs.next()) {
                 
-                //What I receieve:  int userID, String email, String fullName, String username, int role
+                //What I receieve:  int userID, String fullName, String username, roleval
                 User user = new User(rs.getString("user_id"), rs.getString("full_name"), rs.getString("username"), rs.getString("role"));
-                //Perfevel perfevel = new Perfevel(getTechReport());
+                user.placeholder.setText("View Report");
+                user.placeholder.setOnAction(eh -> displayReportTech());
                 
                 list.add(user);
-                //list1.add(perfevel);
             }
 
             flUsers = new FilteredList(FXCollections.observableList(list), p -> true);
             table.getItems().addAll(flUsers);
-            //flPerfevel = new FilteredList(FXCollections.observableList(list1), p -> true);
-            //table.getItems().addAll(flPerfevel);
             //
             rs.close();
-            //rs1.close();
             stmt.close();
             conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
+        private void displayReportTech() {
+        Stage x = new Stage();
+        VBox container = new VBox();
+        Scene scene = new Scene(container);
+        scene.getStylesheets().add("file:stylesheet.css");
+        x.setScene(scene);
+
+        HBox hello = new HBox();
+        Label showreport = new Label(getTechReport());
+        Button b = new Button("Back");
+        hello.getChildren().addAll(showreport, b);
+        container.getChildren().addAll(hello);
+        b.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            
+            public void handle(ActionEvent eh) {
+                x.close();
+            }
+        });
+        x.showAndWait();
+        }
     
         private String getTechReport() {
             String sql = "SELECT AVG (techtime1) AS days"
@@ -1403,7 +1435,7 @@ public class Administrator extends Stage {
             
 
             while (rs.next()) {
-                total = rs.getDouble("days") + " minutes";
+                total = rs.getDouble("days") + " minutes on average";
             }
             
             //
@@ -1413,7 +1445,6 @@ public class Administrator extends Stage {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println(total);
         return total;
         }
 
@@ -1436,7 +1467,7 @@ public class Administrator extends Stage {
         fullNameCol.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         roleCol.setCellValueFactory(new PropertyValueFactory<>("roleVal"));
-        reportsCol.setCellValueFactory(new PropertyValueFactory<>("time"));
+        reportsCol.setCellValueFactory(new PropertyValueFactory<>("placeholder"));
 
         //Couldn't put all the styling
         userIDCol.prefWidthProperty().bind(table.widthProperty().multiply(0.09));
@@ -1510,22 +1541,19 @@ public class Administrator extends Stage {
             ResultSet rs = stmt.executeQuery(sql);
             //
             List<User> list = new ArrayList<User>();
-            List<Perfevel> list1 = new ArrayList<Perfevel>();
 
             while (rs.next()) {
                 
-                //What I receieve:  int userID, String email, String fullName, String username, int role
+                //What I receieve:  int userID, String fullName, String username, roleval
                 User user = new User(rs.getString("user_id"), rs.getString("full_name"), rs.getString("username"), rs.getString("role"));
-                Perfevel perfevel = new Perfevel(getRecReport());
+                user.placeholder.setText("View Report");
+                user.placeholder.setOnAction(eh -> displayReportRec());
                 
                 list.add(user);
-                list1.add(perfevel);
             }
 
             flUsers = new FilteredList(FXCollections.observableList(list), p -> true);
             table.getItems().addAll(flUsers);
-            flPerfevel = new FilteredList(FXCollections.observableList(list1), p -> true);
-            table.getItems().addAll(flPerfevel);
             //
             rs.close();
             stmt.close();
@@ -1534,6 +1562,27 @@ public class Administrator extends Stage {
             System.out.println(e.getMessage());
         }
     }
+        private void displayReportRec() {
+        Stage x = new Stage();
+        VBox container = new VBox();
+        Scene scene = new Scene(container);
+        scene.getStylesheets().add("file:stylesheet.css");
+        x.setScene(scene);
+
+        HBox hello = new HBox();
+        Label showreport = new Label(getRecReport());
+        Button b = new Button("Back");
+        hello.getChildren().addAll(showreport, b);
+        container.getChildren().addAll(hello);
+        b.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            
+            public void handle(ActionEvent eh) {
+                x.close();
+            }
+        });
+        x.showAndWait();
+        }
     
         private String getRecReport() {
             String sql = "SELECT AVG (rectime1) AS days"
@@ -1550,7 +1599,7 @@ public class Administrator extends Stage {
             
 
             while (rs.next()) {
-                total = rs.getDouble("days") + " minutes";
+                total = rs.getDouble("days") + " minutes on average";
             }
             
             //
@@ -1560,7 +1609,6 @@ public class Administrator extends Stage {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println(total);
         return total;
         }
 
