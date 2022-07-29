@@ -692,6 +692,7 @@ public class Billing extends Stage {
                 }
 
                 int paymentAMT = Integer.parseInt(ep.getText());
+                double payAMT = paymentAMT;
                 //int BillAMT = Integer;
 
 
