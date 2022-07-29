@@ -8,6 +8,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 /**
  *
@@ -159,6 +160,19 @@ public class InputValidation {
     public static boolean validatePayment(String payment) {
         try {
             Float.parseFloat(payment);
+
+            int paymentAMT = Integer.parseInt(payment);
+            System.out.println(paymentAMT);
+
+            if (paymentAMT < 0){
+                Alert A = new Alert(Alert.AlertType.INFORMATION);
+                A.setTitle("Error");
+                A.setHeaderText("Please Try Again");
+                A.setContentText("Bill can not go below $0.00.");
+                A.show();
+                return false;
+            }
+
         } catch (Exception b) {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setTitle("Error");
@@ -168,6 +182,23 @@ public class InputValidation {
             return false;
         }
         return true;
+    }
+
+
+    public static boolean validateNegPayment(int payAMT, int billAMT){
+        
+        if (payAMT > billAMT){
+            Alert A = new Alert(Alert.AlertType.INFORMATION);
+                A.setTitle("Error");
+                A.setHeaderText("Please Try Again");
+                A.setContentText("Bill can not go below $0.00.");
+                A.show();
+                return false;
+        }
+        else {
+            return true;
+        }
+
     }
 
     public static boolean validateDOB(String date) {

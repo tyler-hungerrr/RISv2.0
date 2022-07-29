@@ -679,14 +679,31 @@ public class Billing extends Stage {
         Button b = new Button("Submit");
         hello.getChildren().addAll(enterpay, ep, dropdown, b);
         container.getChildren().addAll(hello);
+        
         b.setOnAction(new EventHandler<ActionEvent>() {
             @Override
+            
             public void handle(ActionEvent eh) {
+
+                int paymentAMT = Integer.parseInt(ep.getText());
+
                 if (!InputValidation.validatePayment(ep.getText())) {
+
+                    
 
                     return;
 
                 }
+
+                if (paymentAMT < 0) {
+                    try {
+                        throw new Exception("Error: Balance can not be lower than $0.00.");
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+                
                 String sql = "";
                 if (dropdown.getValue().toString().equals("Patient")) {
                     sql = "INSERT INTO patientPayments(apptID, time, patientPayment, byPatient) VALUES ('" + appt.getApptID() + "', '" + LocalDate.now() + "' , '" + ep.getText() + "', '1' )";
