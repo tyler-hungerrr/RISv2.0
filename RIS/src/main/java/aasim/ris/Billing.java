@@ -685,24 +685,22 @@ public class Billing extends Stage {
             
             public void handle(ActionEvent eh) {
 
-                int paymentAMT = Integer.parseInt(ep.getText());
-
                 if (!InputValidation.validatePayment(ep.getText())) {
-
-                    
 
                     return;
 
                 }
 
-                if (paymentAMT < 0) {
-                    try {
-                        throw new Exception("Error: Balance can not be lower than $0.00.");
-                    } catch (Exception e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
+                int paymentAMT = Integer.parseInt(ep.getText());
+                //int BillAMT = Integer;
+
+
+                if (!InputValidation.validateNegPayment(paymentAMT, BillAMT)){
+
+                    return;
                 }
+
+                
                 
                 String sql = "";
                 if (dropdown.getValue().toString().equals("Patient")) {
